@@ -166,7 +166,7 @@ const Admin = (props) => {
           </Modal>
         </Col>
         <div className="mx-5" fluid>
-          <AdminFooter />
+          {/* <AdminFooter /> */}
         </div>
       </div>
     </>

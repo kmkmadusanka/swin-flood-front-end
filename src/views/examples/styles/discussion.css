@@ -1,0 +1,11 @@
+.react-chat-container{
+    max-width:100vw;
+}
+
+.react-chat-viewerBox{
+    border-radius:1vh;
+}
+
+.react-chat-message-buttonGroupRight{
+    width:10vh
+}
