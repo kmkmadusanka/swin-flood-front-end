@@ -1,60 +1,33 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import { useState } from "react";
-// node.js library that concatenates classes (strings)
-import classnames from "classnames";
-// javascipt plugin for creating charts
-import Chart from "chart.js";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+import { Map, Marker, GoogleApiWrapper, InfoWindow } from "google-maps-react";
+import "./examples/styles/index.css";
+
 // reactstrap components
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
-  NavItem,
-  NavLink,
-  Nav,
   Progress,
   Table,
   Container,
   Row,
   Col,
+  CardImg,
+  CardTitle,
+  Button,
+  CardText,
 } from "reactstrap";
 
-// core components
-import {
-  chartOptions,
-  parseOptions,
-  chartExample1,
-  chartExample2,
-} from "variables/charts.js";
-
 import Header from "components/Headers/Header.js";
+
+const style = {
+  width: "95%",
+  height: "50vh",
+};
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
-
-  if (window.Chart) {
-    parseOptions(Chart, chartOptions());
-  }
 
   const toggleNavs = (e, index) => {
     e.preventDefault();
@@ -67,24 +40,62 @@ const Index = (props) => {
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row xl="8">
-          <Col className="mb-5 mb-xl-0" xl="8">
-            <Card className="bg-gradient-default shadow">
+          <Col className="mb-1 mb-xl-0" xl="8">
+            <Card className=" shadow">
               <CardHeader className="bg-transparent">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h2 className="text-white mb-0">Rainfall Data</h2>
+                    <h2 className=" mb-0">Rainfall Data</h2>
                   </div>
                 </Row>
               </CardHeader>
-              <CardBody>
-                {/* Chart */}
-                <div className="chart">
-                  <Line
-                    data={chartExample1[chartExample1Data]}
-                    options={chartExample1.options}
-                    getDatasetAtEvent={(e) => console.log(e)}
-                  />
-                </div>
+              <CardBody className="map-wrapper">
+                <Map
+                  google={props.google}
+                  zoom={11}
+                  initialCenter={{
+                    lat: 8.534487235852568,
+                    lng: 80.29865337839264,
+                  }}
+                  position={"Center"}
+                  style={style}
+                >
+                  <Marker
+                    name={"Location A"}
+                    title="Location"
+                    position={{
+                      lat: 8.503673389577162,
+                      lng: 80.28383615620632,
+                    }}
+                  ></Marker>
+
+                  <Marker
+                    name={"Location A"}
+                    title="Location"
+                    position={{
+                      lat: 8.543207218523076,
+                      lng: 80.29468095325936,
+                    }}
+                  ></Marker>
+
+                  <Marker
+                    name={"Location A"}
+                    title="Location"
+                    position={{
+                      lat: 8.496783908472604,
+                      lng: 80.29444347595162,
+                    }}
+                  ></Marker>
+
+                  <Marker
+                    name={"Location A"}
+                    title="Location"
+                    position={{
+                      lat: 8.487702130663347,
+                      lng: 80.31660802467319,
+                    }}
+                  ></Marker>
+                </Map>
               </CardBody>
             </Card>
           </Col>
@@ -227,55 +238,56 @@ const Index = (props) => {
                   </div>
                 </Row>
               </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Tips</th>
-                    <th scope="col" />
-                    <th scope="col" />
-                    <th scope="col" />
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">
-                      Maintenance of <br /> existing infrastructure
-                    </th>
-                    <td>
-                      Ongoing maintenance to existing creeks and stormwater
-                      drainage systems is vital to maintain the hydraulic
-                      performance of drains. Developing and reviewing a regular
-                      maintenance <br /> schedule for flood prone areas can
-                      provide significant benefit during seasonal rains. While
-                      targeted clearing of creek systems does not always help
-                      reduce the impact of large flood events, <br /> it does
-                      help reduce the impact of smaller, more frequent floods.
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <th scope="row">Land use planning controls</th>
-                    <td>
-                      Strategic land use planning will identify the extent of
-                      flood impacted land to limit the construction of urban and
-                      rural residential,
-                      <br /> commercial and industrial land. The NT Planning
-                      Scheme requires all new developments to undertake land
-                      suitability investigations to determine the extent of
-                      constrained land.
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Building and development controls</th>
-                    <td>
-                      Existing building controls require new homes or
-                      substantial renovations to construct habitable floor
-                      levels 300mm above Q100 year flood levels, to provide some
-                      level of protection from flooding.
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
+              <row className="d-flex flex-row pl-3">
+                <Col>
+                  <Card style={{ width: "18rem" }}>
+                    <CardImg
+                      alt="..."
+                      src={require("assets/img/brand/swin-flood.png")}
+                      top
+                    />
+                    <CardBody>
+                      <CardTitle>Card title</CardTitle>
+                      <CardText>
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                      </CardText>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card style={{ width: "18rem" }}>
+                    <CardImg
+                      alt="..."
+                      src={require("assets/img/brand/swin-flood.png")}
+                      top
+                    />
+                    <CardBody>
+                      <CardTitle>Card title</CardTitle>
+                      <CardText>
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                      </CardText>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card style={{ width: "18rem" }}>
+                    <CardImg
+                      alt="..."
+                      src={require("assets/img/brand/swin-flood.png")}
+                      top
+                    />
+                    <CardBody>
+                      <CardTitle>Card title</CardTitle>
+                      <CardText>
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                      </CardText>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </row>
             </Card>
           </Col>
         </Row>
@@ -284,4 +296,7 @@ const Index = (props) => {
   );
 };
 
-export default Index;
+export default GoogleApiWrapper({
+  apiKey: "AIzaSyCOwqP559NkBp30UqCx3fVCc8xlxRZup2A",
+  version: 3.31,
+})(Index);
