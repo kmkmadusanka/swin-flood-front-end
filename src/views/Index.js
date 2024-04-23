@@ -40,19 +40,46 @@ const Index = (props) => {
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row xl="8">
-          <Col className="mb-1 mb-xl-0" xl="8">
+          <Col className=" mb-xl-0" xl="8">
             <Card className=" shadow">
-              <CardHeader className="bg-transparent">
-                <Row className="align-items-center">
+              <CardHeader className="bg-transparent pb-1">
+                <Row className=" d-flex justify-content-between">
                   <div className="col">
-                    <h2 className=" mb-0">Rainfall Data</h2>
+                    <h3 className=" mb-0">Flood Severity</h3>
+                  </div>
+                  <div className="d-flex flex-row">
+                    <div className="d-flex flex-row">
+                      <img
+                        alt="..."
+                        src={require("assets/img/icons/common/triangle-red.ico")}
+                        height={24}
+                      />
+                      <p className="pl-2"> - High</p>
+                    </div>
+                    <div className="d-flex flex-row pl-3">
+                      <img
+                        alt="..."
+                        src={require("assets/img/icons/common/triangle-blue.ico")}
+                        height={24}
+                      />
+                      <p className="pl-2"> - Medium</p>
+                    </div>
+                    <div className="d-flex flex-row pl-3 pr-3">
+                      <img
+                        alt="..."
+                        src={require("assets/img/icons/common/triangle-green.ico")}
+                        height={24}
+                      />
+                      <p className="pl-2"> - Low</p>
+                    </div>
                   </div>
                 </Row>
               </CardHeader>
               <CardBody className="map-wrapper">
+                <small>* Severity levels valid for 5 Km diagonal</small>
                 <Map
                   google={props.google}
-                  zoom={11}
+                  zoom={12}
                   initialCenter={{
                     lat: 8.534487235852568,
                     lng: 80.29865337839264,
@@ -67,6 +94,9 @@ const Index = (props) => {
                       lat: 8.503673389577162,
                       lng: 80.28383615620632,
                     }}
+                    icon={{
+                      url: require("assets/img/icons/common/triangle-red.ico"),
+                    }}
                   ></Marker>
 
                   <Marker
@@ -75,6 +105,9 @@ const Index = (props) => {
                     position={{
                       lat: 8.543207218523076,
                       lng: 80.29468095325936,
+                    }}
+                    icon={{
+                      url: require("assets/img/icons/common/triangle-green.ico"),
                     }}
                   ></Marker>
 
@@ -85,6 +118,9 @@ const Index = (props) => {
                       lat: 8.496783908472604,
                       lng: 80.29444347595162,
                     }}
+                    icon={{
+                      url: require("assets/img/icons/common/triangle-blue.ico"),
+                    }}
                   ></Marker>
 
                   <Marker
@@ -93,6 +129,9 @@ const Index = (props) => {
                     position={{
                       lat: 8.487702130663347,
                       lng: 80.31660802467319,
+                    }}
+                    icon={{
+                      url: require("assets/img/icons/common/triangle-blue.ico"),
                     }}
                   ></Marker>
                 </Map>
