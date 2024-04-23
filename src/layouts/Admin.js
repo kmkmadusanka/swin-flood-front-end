@@ -8,33 +8,9 @@ import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import { Container, Button, Link } from "react-floating-action-button";
 
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Modal,
-  Row,
-  Col,
-} from "reactstrap";
-
 import routes from "routes.js";
 
 const Admin = (props) => {
-  const [modalIsOpen, setModalIsOpen] = useState(true);
-
-  const setModalIsOpenToTrue = () => {
-    setModalIsOpen(true);
-  };
-
-  const setModalIsOpenToFalse = () => {
-    setModalIsOpen(false);
-  };
   const mainContent = React.useRef(null);
   const location = useLocation();
 
@@ -102,69 +78,6 @@ const Admin = (props) => {
           </Button>
         </Container>
 
-        <Col md="4">
-          {/* <Button
-            block
-            color="default"
-            type="button"
-            onClick={setModalIsOpenToTrue}
-          >
-            Form
-          </Button> */}
-          <Modal
-            className="modal-dialog-centered"
-            size="sm"
-            isOpen={modalIsOpen}
-            onRequestClose={() => setModalIsOpen(false)}
-          >
-            <div className="modal-body p-0">
-              <Card className="bg-secondary shadow border-0">
-                <div className="text-right ">
-                  <button
-                    className="btn btn-link pb-0 mb-0"
-                    onClick={setModalIsOpenToFalse}
-                  >
-                    <h3>
-                      <i className="ni ni-fat-remove" />
-                    </h3>
-                  </button>
-                </div>
-
-                <CardHeader className="bg-transparent pt-0">
-                  <div className="text-muted text-center mb-3">
-                    <h2>Subscribe to Flood Alerts</h2>
-                  </div>
-                  <div className="btn-wrapper text-center"></div>
-                </CardHeader>
-                <CardBody className="px-lg-5 ">
-                  <div className="text-center text-muted mb-4">
-                    <small>Enter your email to subscribe to this service</small>
-                  </div>
-                  <Form role="form">
-                    <FormGroup className="mb-3">
-                      <InputGroup className="input-group-alternative">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="ni ni-email-83" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input placeholder="Email" type="email" />
-                      </InputGroup>
-                    </FormGroup>
-
-                    <div className="text-center">
-                      <input
-                        className="btn btn-success"
-                        type="submit"
-                        value="Subscribe"
-                      />
-                    </div>
-                  </Form>
-                </CardBody>
-              </Card>
-            </div>
-          </Modal>
-        </Col>
         <div className="mx-5" fluid>
           {/* <AdminFooter /> */}
         </div>
