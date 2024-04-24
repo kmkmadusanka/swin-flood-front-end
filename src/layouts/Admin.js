@@ -55,7 +55,7 @@ const Admin = (props) => {
           imgAlt: "...",
         }}
       />
-      <div className="main-content" ref={mainContent}>
+      <div className="main-content overflow-hidden" ref={mainContent}>
         <AdminNavbar
           {...props}
           brandText={getBrandText(props?.location?.pathname)}
