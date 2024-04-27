@@ -81,8 +81,8 @@ const Index = (props) => {
                   google={props.google}
                   zoom={12}
                   initialCenter={{
-                    lat: 8.534487235852568,
-                    lng: 80.29865337839264,
+                    lat: process.env.REACT_APP_DEFAULT_LOCATION_LAT,
+                    lng: process.env.REACT_APP_DEFAULT_LOCATION_LON,
                   }}
                   position={"Center"}
                   style={style}
@@ -336,6 +336,6 @@ const Index = (props) => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyCOwqP559NkBp30UqCx3fVCc8xlxRZup2A",
+  apiKey: `${process.env.REACT_APP_GOOGLE_API_KEY}`,
   version: 3.31,
 })(Index);
