@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Map, Marker, GoogleApiWrapper, InfoWindow } from "google-maps-react";
 import "./examples/styles/index.css";
 
@@ -26,14 +26,68 @@ const style = {
 };
 
 const Index = (props) => {
-  const [activeNav, setActiveNav] = useState(1);
-  const [chartExample1Data, setChartExample1Data] = useState("data1");
+  const [locations, setLocations] = useState([]);
+  const [preventionTips, setPreventionTips] = useState([]);
+  const [predictions, setPrediction] = useState([]);
 
-  const toggleNavs = (e, index) => {
-    e.preventDefault();
-    setActiveNav(index);
-    setChartExample1Data("data" + index);
-  };
+  useEffect(() => {
+    // set locations into the component
+    setLocations([
+      {
+        point: { lat: 8.534487235852568, lng: 80.29865337839264 },
+        address: "No 1234, ABC Road, XYZ place",
+        severity: "red",
+      },
+      {
+        point: { lat: 8.543207218523076, lng: 80.29468095325936 },
+        address: "No 2345, CDE Road, ABC place",
+        severity: "green",
+      },
+      {
+        point: { lat: 8.496783908472604, lng: 80.29444347595162 },
+        address: "No 3456, EFG Road, CDE place",
+        severity: "blue",
+      },
+      {
+        point: { lat: 8.487702130663347, lng: 80.31660802467319 },
+        address: "No 7890, DFG Road, HJK place",
+        severity: "red",
+      },
+    ]);
+    // flood prevention tips
+    setPreventionTips([
+      {
+        image: "1.jpg",
+        title: "Early warning systems",
+        description:
+          "As many floods occur at night, early warning systems are extremely important in flash flooding events to provide residents with the ability to respond to impending flood waters. This may include relocating of parked vehicles, collecting pets and valuables and implementing personal emergency plans.",
+      },
+      {
+        image: "2.jpg",
+        title: "Land use planning controls",
+        description:
+          "Strategic land use planning will identify the extent of flood impacted land to limit the construction of urban and rural residential, commercial and industrial land. The NT Planning Scheme requires all new developments to undertake land suitability investigations to determine the extent of constrained land",
+      },
+      {
+        image: "3.jpg",
+        title: "Develop a household emergency plan",
+        description:
+          "In conjunction with a household emergency kit, a household emergency plan is essential for all Territorians. Regardless of any mitigation measures, every household must be prepared for extreme weather, including flooding.",
+      },
+    ]);
+
+    // set prediction data
+    setPrediction([
+      { date: "today", rainfall: "187", prediction: "60" },
+      { date: "Tomorrow", rainfall: "100", prediction: "70" },
+      { date: "20th April", rainfall: "195", prediction: "80" },
+      { date: "21st April", rainfall: "165", prediction: "75" },
+      { date: "22nd April", rainfall: "67", prediction: "30" },
+      { date: "23rd April", rainfall: "65", prediction: "30" },
+      { date: "24th April", rainfall: "60", prediction: "30" },
+    ]);
+  }, []);
+
   return (
     <>
       <Header />
@@ -87,53 +141,16 @@ const Index = (props) => {
                   position={"Center"}
                   style={style}
                 >
-                  <Marker
-                    name={"Location A"}
-                    title="Location"
-                    position={{
-                      lat: 8.503673389577162,
-                      lng: 80.28383615620632,
-                    }}
-                    icon={{
-                      url: require("assets/img/icons/common/triangle-red.ico"),
-                    }}
-                  ></Marker>
-
-                  <Marker
-                    name={"Location A"}
-                    title="Location"
-                    position={{
-                      lat: 8.543207218523076,
-                      lng: 80.29468095325936,
-                    }}
-                    icon={{
-                      url: require("assets/img/icons/common/triangle-green.ico"),
-                    }}
-                  ></Marker>
-
-                  <Marker
-                    name={"Location A"}
-                    title="Location"
-                    position={{
-                      lat: 8.496783908472604,
-                      lng: 80.29444347595162,
-                    }}
-                    icon={{
-                      url: require("assets/img/icons/common/triangle-blue.ico"),
-                    }}
-                  ></Marker>
-
-                  <Marker
-                    name={"Location A"}
-                    title="Location"
-                    position={{
-                      lat: 8.487702130663347,
-                      lng: 80.31660802467319,
-                    }}
-                    icon={{
-                      url: require("assets/img/icons/common/triangle-blue.ico"),
-                    }}
-                  ></Marker>
+                  {locations.map((location, i) => (
+                    <Marker
+                      name={location.address}
+                      title={location.address}
+                      position={location.point}
+                      icon={{
+                        url: require(`assets/img/icons/common/triangle-${location.severity}.ico`),
+                      }}
+                    ></Marker>
+                  ))}
                 </Map>
               </CardBody>
             </Card>
@@ -156,114 +173,30 @@ const Index = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">Today</th>
-                    <td>187 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">60%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="60"
-                            barClassName="bg-gradient-danger"
-                          />
+                  {predictions.map((p, i) => (
+                    <tr>
+                      <th scope="row">{p.date}</th>
+                      <td>{p.rainfall} mm</td>
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <span className="mr-2">{p.prediction}%</span>
+                          <div>
+                            <Progress
+                              max="100"
+                              value={`${p.prediction}`}
+                              barClassName={
+                                Number(p.prediction) >= 70
+                                  ? "bg-gradient-danger"
+                                  : Number(p.prediction) > 50
+                                  ? "bg-gradient-info"
+                                  : "bg-gradient-success"
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Tomorrow</th>
-                    <td>100 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">70%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="70"
-                            barClassName="bg-gradient-success"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">20th April</th>
-                    <td>195 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">80%</span>
-                        <div>
-                          <Progress max="100" value="80" />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">21st April</th>
-                    <td>165 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">75%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="75"
-                            barClassName="bg-gradient-info"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">22nd April</th>
-                    <td>67 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">30%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="30"
-                            barClassName="bg-gradient-warning"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">23rd April</th>
-                    <td>65 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">30%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="30"
-                            barClassName="bg-gradient-warning"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">24th April</th>
-                    <td>60 mm</td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">30%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="30"
-                            barClassName="bg-gradient-warning"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </Card>
@@ -277,55 +210,24 @@ const Index = (props) => {
                   </div>
                 </Row>
               </CardHeader>
-              <row className="d-flex flex-row pl-3">
-                <Col>
-                  <Card style={{ width: "18rem" }}>
-                    <CardImg
-                      alt="..."
-                      src={require("assets/img/brand/swin-flood.png")}
-                      top
-                    />
-                    <CardBody>
-                      <CardTitle>Card title</CardTitle>
-                      <CardText>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </Col>
-                <Col>
-                  <Card style={{ width: "18rem" }}>
-                    <CardImg
-                      alt="..."
-                      src={require("assets/img/brand/swin-flood.png")}
-                      top
-                    />
-                    <CardBody>
-                      <CardTitle>Card title</CardTitle>
-                      <CardText>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </Col>
-                <Col>
-                  <Card style={{ width: "18rem" }}>
-                    <CardImg
-                      alt="..."
-                      src={require("assets/img/brand/swin-flood.png")}
-                      top
-                    />
-                    <CardBody>
-                      <CardTitle>Card title</CardTitle>
-                      <CardText>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </Col>
+              <row className="d-flex flex-row pl-3 mb-3">
+                {preventionTips.map((tip, i) => (
+                  <Col>
+                    <Card style={{ width: "23vw", minHeight: "60vh" }}>
+                      <CardImg
+                        alt="..."
+                        src={require(`assets/img/detailed/${tip.image}`)}
+                        top
+                      />
+                      <CardBody>
+                        <CardTitle>{tip.title}</CardTitle>
+                        <CardText>
+                          <small>{tip.description}</small>
+                        </CardText>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                ))}
               </row>
             </Card>
           </Col>
