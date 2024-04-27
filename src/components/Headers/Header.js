@@ -1,7 +1,38 @@
+import { useEffect, useState } from "react";
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
 const Header = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    const fetchDataForPosts = async () => {
+      try {
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.REACT_APP_DEFAULT_LOCATION_LAT}&lon=${process.env.REACT_APP_DEFAULT_LOCATION_LON}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=metric`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error: Status ${response.status}`);
+        }
+        let postsData = await response.json();
+        setData(postsData);
+        setError(null);
+        setCounter(0);
+      } catch (err) {
+        setError(err.message);
+        setData(null);
+      }
+    };
+
+    fetchDataForPosts();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => setCounter(counter + 1), 10000);
+  }, [counter]);
+
   return (
     <>
       <div className="header bg-gradient-cyan pb-8 pt-5 pt-md-8">
@@ -20,7 +51,9 @@ const Header = () => {
                         >
                           Temperature
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">24.5 C</span>
+                        <span className="h2 font-weight-bold mb-0">
+                          {data !== null ? data.main.temp : "0"} °C
+                        </span>
                       </div>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -29,7 +62,9 @@ const Header = () => {
                       </Col>
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-nowrap">Updated 5min Ago</span>
+                      <span className="text-nowrap">
+                        Updated {counter} min Ago
+                      </span>
                     </p>
                   </CardBody>
                 </Card>
@@ -45,7 +80,10 @@ const Header = () => {
                         >
                           Humidity
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">67.5%</span>
+                        <span className="h2 font-weight-bold mb-0">
+                          {" "}
+                          {data !== null ? data.main.humidity : "0"} %
+                        </span>
                       </div>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -54,7 +92,9 @@ const Header = () => {
                       </Col>
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-nowrap">Updated 5min Ago</span>
+                      <span className="text-nowrap">
+                        Updated {counter} min Ago
+                      </span>
                     </p>
                   </CardBody>
                 </Card>
@@ -70,7 +110,9 @@ const Header = () => {
                         >
                           Wind Speed
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">4 Km/h</span>
+                        <span className="h2 font-weight-bold mb-0">
+                          {data !== null ? data.wind.speed : "0"} Km/h
+                        </span>
                       </div>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -79,7 +121,9 @@ const Header = () => {
                       </Col>
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-nowrap">Updated 5min Ago</span>
+                      <span className="text-nowrap">
+                        Updated {counter} min Ago
+                      </span>
                     </p>
                   </CardBody>
                 </Card>
@@ -96,7 +140,7 @@ const Header = () => {
                           Pressure
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
-                          997 hPa
+                          {data !== null ? data.main.pressure : "0"} hPa
                         </span>
                       </div>
                       <Col className="col-auto">
@@ -106,7 +150,9 @@ const Header = () => {
                       </Col>
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-nowrap">Updated 5min Ago</span>
+                      <span className="text-nowrap">
+                        Updated {counter} min Ago
+                      </span>
                     </p>
                   </CardBody>
                 </Card>

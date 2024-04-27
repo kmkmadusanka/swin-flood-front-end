@@ -34,7 +34,10 @@ class Maps extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      point: { lat: 8.534487235852568, lng: 80.29865337839264 },
+      point: {
+        lat: process.env.REACT_APP_DEFAULT_LOCATION_LAT,
+        lng: process.env.REACT_APP_DEFAULT_LOCATION_LON,
+      },
       zoom: 13,
     };
   }
@@ -106,6 +109,6 @@ class Maps extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyCOwqP559NkBp30UqCx3fVCc8xlxRZup2A",
+  apiKey: `${process.env.REACT_APP_GOOGLE_API_KEY}`,
   version: 3.31,
 })(Maps);
