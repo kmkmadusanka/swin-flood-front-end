@@ -30,7 +30,7 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => setCounter(counter + 1), 10000);
+    setTimeout(() => setCounter(counter + 1), 60000);
   }, [counter]);
 
   return (
