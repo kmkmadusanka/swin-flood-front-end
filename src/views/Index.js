@@ -213,7 +213,7 @@ const Index = (props) => {
               <row className="d-flex flex-row pl-3 mb-3">
                 {preventionTips.map((tip, i) => (
                   <Col>
-                    <Card style={{ width: "23vw", minHeight: "60vh" }}>
+                    <Card style={{ width: "23vw", minHeight: "50vh" }}>
                       <CardImg
                         alt="..."
                         src={require(`assets/img/detailed/${tip.image}`)}
