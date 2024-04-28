@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import {
-  Badge,
   Card,
   CardHeader,
   CardFooter,
@@ -7,7 +7,6 @@ import {
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  Media,
   Pagination,
   PaginationItem,
   PaginationLink,
@@ -15,14 +14,16 @@ import {
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
 // excel download
 import exportFromJSON from "export-from-json";
+import ReactPaginate from "react-paginate";
 
-const rows = [
+import "../examples/styles/table.css";
+
+const items = [
   {
     date: "20th April 2024",
     rainfall: "30",
@@ -30,28 +31,123 @@ const rows = [
   },
   {
     date: "22th April 2024",
-    rainfall: "30",
+    rainfall: "34",
     flood_prediction: "40",
   },
   {
     date: "22th April 2024",
-    rainfall: "30",
+    rainfall: "35",
     flood_prediction: "40",
   },
   {
     date: "22th April 2024",
-    rainfall: "30",
+    rainfall: "36",
+    flood_prediction: "40",
+  },
+  {
+    date: "20th April 2024",
+    rainfall: "300",
+    flood_prediction: "40",
+  },
+  {
+    date: "22th April 2024",
+    rainfall: "340",
+    flood_prediction: "40",
+  },
+  {
+    date: "22th April 2024",
+    rainfall: "350",
+    flood_prediction: "40",
+  },
+  {
+    date: "22th April 2024",
+    rainfall: "360",
     flood_prediction: "40",
   },
 ];
 
 const Tables = () => {
   const Export = () => {
-    const data = rows;
+    const data = items;
     const fileName = "flood-prediction-data";
     const exportType = exportFromJSON.types.csv;
     exportFromJSON({ data, fileName, exportType });
   };
+
+  function Items({ currentItems }) {
+    return (
+      <>
+        <Table className="align-items-center table-flush" responsive>
+          <thead className="thead-light">
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Rainfall</th>
+              <th scope="col">Flood Prediction Percentage</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {currentItems &&
+              currentItems.map((row) => (
+                <tr>
+                  <td>{row.date}</td>
+                  <td>{row.rainfall} ml</td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <span className="mr-2"> {row.flood_prediction} %</span>
+                      <div>
+                        <Progress
+                          max="100"
+                          value={`${row.flood_prediction}`}
+                          barClassName={
+                            Number(row.flood_prediction) >= 70
+                              ? "bg-gradient-danger"
+                              : Number(row.flood_prediction) > 50
+                              ? "bg-gradient-info"
+                              : "bg-gradient-success"
+                          }
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+      </>
+    );
+  }
+
+  function PaginatedItems({ itemsPerPage }) {
+    const [itemOffset, setItemOffset] = useState(0);
+    const endOffset = itemOffset + itemsPerPage;
+    const currentItems = items.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(items.length / itemsPerPage);
+
+    // Invoke when user click to request another page.
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % items.length;
+      setItemOffset(newOffset);
+    };
+
+    return (
+      <>
+        <Items currentItems={currentItems} />
+        <div className="col-md-12 d-flex justify-content-center">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -78,96 +174,7 @@ const Tables = () => {
                   </DropdownMenu>
                 </UncontrolledDropdown>
               </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Rainfall</th>
-                    <th scope="col">Flood Prediction Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, i) => (
-                    <tr>
-                      <td>{row.date}</td>
-                      <td>{row.rainfall} ml</td>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <span className="mr-2">
-                            {" "}
-                            {row.flood_prediction} %
-                          </span>
-                          <div>
-                            <Progress
-                              max="100"
-                              value={`${row.flood_prediction}`}
-                              barClassName={
-                                Number(row.flood_prediction) >= 70
-                                  ? "bg-gradient-danger"
-                                  : Number(row.flood_prediction) > 50
-                                  ? "bg-gradient-info"
-                                  : "bg-gradient-success"
-                              }
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-              <CardFooter className="py-4">
-                <nav aria-label="...">
-                  <Pagination
-                    className="pagination justify-content-end mb-0"
-                    listClassName="justify-content-end mb-0"
-                  >
-                    <PaginationItem className="disabled">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                        tabIndex="-1"
-                      >
-                        <i className="fas fa-angle-left" />
-                        <span className="sr-only">Previous</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        2 <span className="sr-only">(current)</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        3
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className="fas fa-angle-right" />
-                        <span className="sr-only">Next</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                  </Pagination>
-                </nav>
-              </CardFooter>
+              <PaginatedItems itemsPerPage={4} />
             </Card>
           </div>
         </Row>
