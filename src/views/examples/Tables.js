@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
-  CardFooter,
+
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
+
   Progress,
   Table,
   Container,
@@ -103,8 +101,8 @@ const Tables = () => {
                             Number(row.flood_prediction) >= 70
                               ? "bg-gradient-danger"
                               : Number(row.flood_prediction) > 50
-                              ? "bg-gradient-info"
-                              : "bg-gradient-success"
+                                ? "bg-gradient-info"
+                                : "bg-gradient-success"
                           }
                         />
                       </div>

@@ -1,5 +1,5 @@
 // reactstrap components
-import ChatBox, { ChatFrame } from "react-chat-plugin";
+import ChatBox from "react-chat-plugin";
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, Container } from "reactstrap";
 import Header from "components/Headers/Header.js";
@@ -40,14 +40,7 @@ const Discussion = () => {
       },
     ],
   });
-  const handleClickIcon = () => {
-    // toggle showChatbox and showIcon
-    setAttr({
-      ...attr,
-      showChatbox: !attr.showChatbox,
-      showIcon: !attr.showIcon,
-    });
-  };
+
   const handleOnSendMessage = (message) => {
     setAttr({
       ...attr,

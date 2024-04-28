@@ -4,7 +4,6 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
 const Header = () => {
   const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
@@ -18,10 +17,9 @@ const Header = () => {
         }
         let postsData = await response.json();
         setData(postsData);
-        setError(null);
+
         setCounter(0);
       } catch (err) {
-        setError(err.message);
         setData(null);
       }
     };

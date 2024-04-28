@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Map, Marker, GoogleApiWrapper, InfoWindow } from "google-maps-react";
+import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import "./examples/styles/index.css";
 
 // reactstrap components
@@ -14,7 +14,7 @@ import {
   Col,
   CardImg,
   CardTitle,
-  Button,
+
   CardText,
 } from "reactstrap";
 
@@ -188,8 +188,8 @@ const Index = (props) => {
                                 Number(p.prediction) >= 70
                                   ? "bg-gradient-danger"
                                   : Number(p.prediction) > 50
-                                  ? "bg-gradient-info"
-                                  : "bg-gradient-success"
+                                    ? "bg-gradient-info"
+                                    : "bg-gradient-success"
                               }
                             />
                           </div>
