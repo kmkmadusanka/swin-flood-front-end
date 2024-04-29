@@ -29,7 +29,21 @@ const Index = (props) => {
   const [locations, setLocations] = useState([]);
   const [preventionTips, setPreventionTips] = useState([]);
   const [predictions, setPrediction] = useState([]);
+  const [lat, setLat] = useState(process.env.REACT_APP_DEFAULT_LOCATION_LAT);
+  const [lon, setLon] = useState(process.env.REACT_APP_DEFAULT_LOCATION_LON);
+  const [zoom, setZoom] = useState(12);
 
+  useEffect(() => {
+    if (
+      localStorage.getItem("location") !== undefined &&
+      localStorage.getItem("location") !== null
+    ) {
+      const userLocation = JSON.parse(localStorage.getItem("location"));
+      setLat(userLocation.lat);
+      setLon(userLocation.lon);
+      setZoom(15);
+    }
+  }, []);
   useEffect(() => {
     // set locations into the component
     setLocations([
@@ -133,11 +147,9 @@ const Index = (props) => {
                 <small>* Severity levels valid for 5 Km diagonal</small>
                 <Map
                   google={props.google}
-                  zoom={12}
-                  initialCenter={{
-                    lat: process.env.REACT_APP_DEFAULT_LOCATION_LAT,
-                    lng: process.env.REACT_APP_DEFAULT_LOCATION_LON,
-                  }}
+                  zoom={zoom}
+                  initialCenter={{ lat: lat, lng: lon }}
+                  center={{ lat: lat, lng: lon }}
                   position={"Center"}
                   style={style}
                 >
