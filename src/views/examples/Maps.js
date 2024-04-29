@@ -45,6 +45,18 @@ class Maps extends Component {
       zoom: 13,
     };
   }
+  componentDidMount() {
+    if (
+      localStorage.getItem("location") !== undefined &&
+      localStorage.getItem("location") !== null
+    ) {
+      const userLocation = JSON.parse(localStorage.getItem("location"));
+      this.setState({
+        point: { lat: userLocation.lat, lng: userLocation.lon },
+        zoom: 16,
+      });
+    }
+  }
   render() {
     return (
       <>
