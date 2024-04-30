@@ -20,6 +20,8 @@ import {
 
 import Header from "components/Headers/Header.js";
 
+import index_lan from "../language/index_lan.js";
+
 const style = {
   width: "95%",
   height: "50vh",
@@ -27,9 +29,30 @@ const style = {
 
 const Index = (props) => {
   const [locations, setLocations] = useState([]);
-  const [preventionTips, setPreventionTips] = useState([]);
-  const [predictions, setPrediction] = useState([]);
 
+  const [predictions, setPrediction] = useState([]);
+  const [lat, setLat] = useState(process.env.REACT_APP_DEFAULT_LOCATION_LAT);
+  const [lon, setLon] = useState(process.env.REACT_APP_DEFAULT_LOCATION_LON);
+  const [zoom, setZoom] = useState(12);
+  const [language, setLanguage] = useState("eng");
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("lan") !== undefined &&
+      localStorage.getItem("lan") !== null
+    ) {
+      setLanguage(localStorage.getItem("lan"));
+    }
+    if (
+      localStorage.getItem("location") !== undefined &&
+      localStorage.getItem("location") !== null
+    ) {
+      const userLocation = JSON.parse(localStorage.getItem("location"));
+      setLat(userLocation.lat);
+      setLon(userLocation.lon);
+      setZoom(15);
+    }
+  }, []);
   useEffect(() => {
     // set locations into the component
     setLocations([
@@ -55,26 +78,6 @@ const Index = (props) => {
       },
     ]);
     // flood prevention tips
-    setPreventionTips([
-      {
-        image: "1.jpg",
-        title: "Early warning systems",
-        description:
-          "As many floods occur at night, early warning systems are extremely important in flash flooding events to provide residents with the ability to respond to impending flood waters. This may include relocating of parked vehicles, collecting pets and valuables and implementing personal emergency plans.",
-      },
-      {
-        image: "2.jpg",
-        title: "Land use planning controls",
-        description:
-          "Strategic land use planning will identify the extent of flood impacted land to limit the construction of urban and rural residential, commercial and industrial land. The NT Planning Scheme requires all new developments to undertake land suitability investigations to determine the extent of constrained land",
-      },
-      {
-        image: "3.jpg",
-        title: "Develop a household emergency plan",
-        description:
-          "In conjunction with a household emergency kit, a household emergency plan is essential for all Territorians. Regardless of any mitigation measures, every household must be prepared for extreme weather, including flooding.",
-      },
-    ]);
 
     // set prediction data
     setPrediction([
@@ -88,6 +91,23 @@ const Index = (props) => {
     ]);
   }, []);
 
+  const preventionTips = [
+    {
+      image: "1.jpg",
+      title: index_lan.early_warning_title[language],
+      description: index_lan.early_warning_description[language],
+    },
+    {
+      image: "2.jpg",
+      title: index_lan.land_use_title[language],
+      description: index_lan.land_use_description[language],
+    },
+    {
+      image: "3.jpg",
+      title: index_lan.household_title[language],
+      description: index_lan.household_description[language],
+    },
+  ];
   return (
     <>
       <Header />
@@ -99,7 +119,9 @@ const Index = (props) => {
               <CardHeader className="bg-transparent pb-1">
                 <Row className=" d-flex justify-content-between">
                   <div className="col">
-                    <h3 className=" mb-0">Flood Severity</h3>
+                    <h3 className=" mb-0">
+                      {index_lan.flood_severit[language]}
+                    </h3>
                   </div>
                   <div className="d-flex flex-row">
                     <div className="d-flex flex-row">
@@ -108,7 +130,7 @@ const Index = (props) => {
                         src={require("assets/img/icons/common/triangle-red.ico")}
                         height={24}
                       />
-                      <p className="pl-2"> - High</p>
+                      <p className="pl-2"> - {index_lan.high[language]}</p>
                     </div>
                     <div className="d-flex flex-row pl-3">
                       <img
@@ -116,7 +138,7 @@ const Index = (props) => {
                         src={require("assets/img/icons/common/triangle-blue.ico")}
                         height={24}
                       />
-                      <p className="pl-2"> - Medium</p>
+                      <p className="pl-2"> - {index_lan.medium[language]}</p>
                     </div>
                     <div className="d-flex flex-row pl-3 pr-3">
                       <img
@@ -124,20 +146,18 @@ const Index = (props) => {
                         src={require("assets/img/icons/common/triangle-green.ico")}
                         height={24}
                       />
-                      <p className="pl-2"> - Low</p>
+                      <p className="pl-2"> - {index_lan.low[language]}</p>
                     </div>
                   </div>
                 </Row>
               </CardHeader>
               <CardBody className="map-wrapper">
-                <small>* Severity levels valid for 5 Km diagonal</small>
+                <small>* {index_lan.severity_notice[language]}</small>
                 <Map
                   google={props.google}
-                  zoom={12}
-                  initialCenter={{
-                    lat: process.env.REACT_APP_DEFAULT_LOCATION_LAT,
-                    lng: process.env.REACT_APP_DEFAULT_LOCATION_LON,
-                  }}
+                  zoom={zoom}
+                  initialCenter={{ lat: lat, lng: lon }}
+                  center={{ lat: lat, lng: lon }}
                   position={"Center"}
                   style={style}
                 >
@@ -160,16 +180,18 @@ const Index = (props) => {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">Rainfall with Flood Prediction</h3>
+                    <h3 className="mb-0">
+                      {index_lan.flood_prediction_title[language]}
+                    </h3>
                   </div>
                 </Row>
               </CardHeader>
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Rainfall</th>
-                    <th scope="col">Flood Prediction</th>
+                    <th scope="col">{index_lan.date[language]}</th>
+                    <th scope="col">{index_lan.rainfall[language]}</th>
+                    <th scope="col">{index_lan.flood_prediction[language]}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -206,7 +228,9 @@ const Index = (props) => {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">Flood Prevention Information</h3>
+                    <h3 className="mb-0">
+                      {index_lan.prevention_title[language]}
+                    </h3>
                   </div>
                 </Row>
               </CardHeader>

@@ -65,6 +65,7 @@ const items = [
 ];
 
 const Tables = () => {
+  const [searchedVal, setSearchedVal] = useState("");
   const Export = () => {
     const data = items;
     const fileName = "flood-prediction-data";
@@ -86,30 +87,39 @@ const Tables = () => {
 
           <tbody>
             {currentItems &&
-              currentItems.map((row) => (
-                <tr>
-                  <td>{row.date}</td>
-                  <td>{row.rainfall} ml</td>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <span className="mr-2"> {row.flood_prediction} %</span>
-                      <div>
-                        <Progress
-                          max="100"
-                          value={`${row.flood_prediction}`}
-                          barClassName={
-                            Number(row.flood_prediction) >= 70
-                              ? "bg-gradient-danger"
-                              : Number(row.flood_prediction) > 50
-                                ? "bg-gradient-info"
-                                : "bg-gradient-success"
-                          }
-                        />
+              currentItems
+                .filter(
+                  (row) =>
+                    !searchedVal.length ||
+                    row.date
+                      .toString()
+                      .toLowerCase()
+                      .includes(searchedVal.toString().toLowerCase())
+                )
+                .map((row) => (
+                  <tr>
+                    <td>{row.date}</td>
+                    <td>{row.rainfall} ml</td>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <span className="mr-2"> {row.flood_prediction} %</span>
+                        <div>
+                          <Progress
+                            max="100"
+                            value={`${row.flood_prediction}`}
+                            barClassName={
+                              Number(row.flood_prediction) >= 70
+                                ? "bg-gradient-danger"
+                                : Number(row.flood_prediction) > 50
+                                  ? "bg-gradient-info"
+                                  : "bg-gradient-success"
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </Table>
       </>
@@ -157,20 +167,30 @@ const Tables = () => {
             <Card className="shadow ">
               <CardHeader className="border-0 d-flex justify-content-between">
                 <h3 className="mb-0">Flood Record History Table</h3>
-                <UncontrolledDropdown>
-                  <DropdownToggle
-                    className="btn-info"
-                    href="#pablo"
-                    role="button"
-                    size="sm"
-                    color=""
-                  >
-                    <span> Actions</span>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu-arrow" right>
-                    <DropdownItem onClick={Export}>Download</DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+                <div className="col-md-6 d-flex  align-items-center">
+                  <div className="col-md-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search from Date"
+                      onChange={(e) => setSearchedVal(e.target.value)}
+                    />
+                  </div>
+                  <UncontrolledDropdown className="col-md-4 d-flex justify-content-end">
+                    <DropdownToggle
+                      className="btn-info"
+                      href="#pablo"
+                      role="button"
+                      size="sm"
+                      color=""
+                    >
+                      <span> Actions</span>
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-menu-arrow" right>
+                      <DropdownItem onClick={Export}>Download</DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </div>
               </CardHeader>
               <PaginatedItems itemsPerPage={4} />
             </Card>

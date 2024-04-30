@@ -2,11 +2,20 @@ import { useEffect, useState } from "react";
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
+import header from "../../language/header_lan.js";
+
 const Header = () => {
+  const [language, setLanguage] = useState("eng");
   const [data, setData] = useState(null);
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
+    if (
+      localStorage.getItem("lan") !== undefined &&
+      localStorage.getItem("lan") !== null
+    ) {
+      setLanguage(localStorage.getItem("lan"));
+    }
     const fetchDataForPosts = async () => {
       try {
         const response = await fetch(
@@ -47,7 +56,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Temperature
+                          {header.temperature[language]}
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
                           {data !== null ? data.main.temp : "0"} °C
@@ -61,7 +70,8 @@ const Header = () => {
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
                       <span className="text-nowrap">
-                        Updated {counter} min Ago
+                        {header.updated[language]} {counter}{" "}
+                        {header.minuit[language]}
                       </span>
                     </p>
                   </CardBody>
@@ -76,7 +86,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Humidity
+                          {header.humidity[language]}
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
                           {" "}
@@ -91,7 +101,8 @@ const Header = () => {
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
                       <span className="text-nowrap">
-                        Updated {counter} min Ago
+                        {header.updated[language]} {counter}{" "}
+                        {header.minuit[language]}
                       </span>
                     </p>
                   </CardBody>
@@ -106,7 +117,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Wind Speed
+                          {header.wind_speed[language]}
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
                           {data !== null ? data.wind.speed : "0"} Km/h
@@ -120,7 +131,8 @@ const Header = () => {
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
                       <span className="text-nowrap">
-                        Updated {counter} min Ago
+                        {header.updated[language]} {counter}{" "}
+                        {header.minuit[language]}
                       </span>
                     </p>
                   </CardBody>
@@ -135,7 +147,7 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          Pressure
+                          {header.pressure[language]}
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
                           {data !== null ? data.main.pressure : "0"} hPa
@@ -149,7 +161,8 @@ const Header = () => {
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
                       <span className="text-nowrap">
-                        Updated {counter} min Ago
+                        {header.updated[language]} {counter}{" "}
+                        {header.minuit[language]}
                       </span>
                     </p>
                   </CardBody>

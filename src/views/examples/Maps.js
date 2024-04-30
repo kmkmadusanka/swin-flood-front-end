@@ -15,18 +15,22 @@ const locations = [
   {
     point: { lat: 8.534487235852568, lng: 80.29865337839264 },
     address: "No 1234, ABC Road, XYZ place",
+    distance_from_location: "2",
   },
   {
     point: { lat: 8.543207218523076, lng: 80.29468095325936 },
     address: "No 2345, CDE Road, ABC place",
+    distance_from_location: "5",
   },
   {
     point: { lat: 8.496783908472604, lng: 80.29444347595162 },
     address: "No 3456, EFG Road, CDE place",
+    distance_from_location: "10",
   },
   {
     point: { lat: 8.487702130663347, lng: 80.31660802467319 },
     address: "No 7890, DFG Road, HJK place",
+    distance_from_location: "10",
   },
 ];
 
@@ -40,6 +44,18 @@ class Maps extends Component {
       },
       zoom: 13,
     };
+  }
+  componentDidMount() {
+    if (
+      localStorage.getItem("location") !== undefined &&
+      localStorage.getItem("location") !== null
+    ) {
+      const userLocation = JSON.parse(localStorage.getItem("location"));
+      this.setState({
+        point: { lat: userLocation.lat, lng: userLocation.lon },
+        zoom: 16,
+      });
+    }
   }
   render() {
     return (
