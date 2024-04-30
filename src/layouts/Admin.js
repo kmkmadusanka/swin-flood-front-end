@@ -15,7 +15,11 @@ const Admin = (props) => {
   const location = useLocation();
   let navigate = useNavigate();
   function navigateDiscussion() {
-    navigate(`/admin/discussion`);
+    if (window.confirm('Are you sure? \nDo you need to send emergency message?')) {
+      navigate(`/admin/discussion`);
+      localStorage.setItem('sos', 'clicked')
+    }
+
   }
 
   React.useEffect(() => {
