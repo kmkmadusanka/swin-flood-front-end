@@ -7,7 +7,6 @@ import header from "../../language/header_lan.js";
 const Header = () => {
   const [language, setLanguage] = useState("eng");
   const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
@@ -27,10 +26,9 @@ const Header = () => {
         }
         let postsData = await response.json();
         setData(postsData);
-        setError(null);
+
         setCounter(0);
       } catch (err) {
-        setError(err.message);
         setData(null);
       }
     };

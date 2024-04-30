@@ -1,7 +1,7 @@
 // reactstrap components
 import React, { Component } from "react";
-import { Card, CardBody, Container, Row, CardTitle, Col } from "reactstrap";
-import { Map, Marker, GoogleApiWrapper, InfoWindow } from "google-maps-react";
+import { Card, CardBody, Container, Row, CardTitle } from "reactstrap";
+import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import "./styles/maps.css";
 // core components
 import Header from "components/Headers/Header.js";

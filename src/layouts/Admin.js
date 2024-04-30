@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 // reactstrap components
 // import { Container } from "reactstrap";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import { Container, Button, Link } from "react-floating-action-button";
+import { useNavigate } from "react-router-dom";
 
 import routes from "routes.js";
 
 const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
+  let navigate = useNavigate();
+  function navigateDiscussion() {
+    if (window.confirm('Are you sure? \nDo you need to send emergency message?')) {
+      navigate(`/admin/discussion`);
+      localStorage.setItem('sos', 'clicked')
+    }
+
+  }
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -70,10 +78,8 @@ const Admin = (props) => {
             right: "1vw",
           }}
         >
-          <Link href="#" tooltip="Police" icon="fa-solid fa-building-shield" />
-          <Link href="#" tooltip="Hospital" icon="fa-solid fa-h" />
-          <Link href="#" tooltip="Fire" icon="fa-solid fa-fire-flame-curved" />
-          <Button tooltip="Emergency Contacts!" rotate={false}>
+
+          <Button tooltip="Emergency Contacts!" onClick={navigateDiscussion} rotate={false}>
             <h2 className="pt-2 "> SOS</h2>
           </Button>
         </Container>
