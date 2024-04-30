@@ -21,6 +21,14 @@ const AdminNavbar = (props) => {
       window.location.reload();
     }
   }
+  function setLanguageSinhala() {
+    localStorage.setItem("lan", "sin");
+    window.location.reload();
+  }
+  function setLanguageEnglish() {
+    localStorage.setItem("lan", "eng");
+    window.location.reload();
+  }
   return (
     <>
       <Navbar className="navbar-top" expand="md" id="navbar-main">
@@ -31,9 +39,8 @@ const AdminNavbar = (props) => {
           >
             {props.brandText}
           </Link>
-
-          {userEmail !== null ? (
-            <Nav className="align-items-center d-none d-md-flex" navbar>
+          <Nav className="align-items-center d-none d-md-flex" navbar>
+            {userEmail !== null ? (
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
@@ -61,10 +68,28 @@ const AdminNavbar = (props) => {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-            </Nav>
-          ) : (
-            <></>
-          )}
+            ) : (
+              <></>
+            )}
+            <UncontrolledDropdown nav>
+              <DropdownToggle className="pr-0" nav>
+                <Media className="align-items-center">
+                  <Media className="ml-2 d-none d-lg-block">
+                    <span className="mb-0 text-sm ">Language</span>
+                  </Media>
+                  <i class="fa fa-arrow-down ml-2" aria-hidden="true"></i>
+                </Media>
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu-arrow" right>
+                <DropdownItem href="#pablo" onClick={setLanguageSinhala}>
+                  <span>Sinhala</span>
+                </DropdownItem>
+                <DropdownItem href="#pablo" onClick={setLanguageEnglish}>
+                  <span>English</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </Nav>
         </Container>
       </Navbar>
     </>
