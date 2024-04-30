@@ -54,8 +54,7 @@ const Discussion = () => {
     } else {
       console.log("Geolocation is not available in your browser.");
     }
-  }, []);
-
+  }, [attr]);
 
 
 
