@@ -6,6 +6,8 @@ const language_object = {
   faq: { sin: "නිති අසන පැණ", eng: "FAQ" },
   login: { sin: "ඇතුල් වන්න", eng: "Login" },
   register: { sin: "ලියාපදිංචි කරන්න", eng: "Register" },
+  users: { sin: "පරිශීලකයන්", eng: "Users" },
+  floodSeverity: { sin: "ගංවතුර බරපතලකම", eng: "Flood Severity" },
 };
 
 export default language_object;

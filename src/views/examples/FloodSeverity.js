@@ -6,7 +6,6 @@ import {
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  Progress,
   Table,
   Container,
   Row,
@@ -19,61 +18,33 @@ import ReactPaginate from "react-paginate";
 
 import "../examples/styles/table.css";
 
-const Tables = () => {
+const FloodSeverity = () => {
   const [searchedVal, setSearchedVal] = useState("");
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     setItems([
       {
-        date: "20th April 2024",
-        rainfall: "30",
-        flood_prediction: "40",
+        address: "No 1234, ABC Road, XYZ place",
+        severity: "red",
+        point: { lat: "111111", lon: "11111" },
       },
       {
-        date: "22th April 2024",
-        rainfall: "34",
-        flood_prediction: "40",
-      },
-      {
-        date: "22th April 2024",
-        rainfall: "35",
-        flood_prediction: "40",
-      },
-      {
-        date: "22th April 2024",
-        rainfall: "36",
-        flood_prediction: "40",
-      },
-      {
-        date: "20th April 2024",
-        rainfall: "300",
-        flood_prediction: "40",
-      },
-      {
-        date: "22th April 2024",
-        rainfall: "340",
-        flood_prediction: "40",
-      },
-      {
-        date: "22th April 2024",
-        rainfall: "350",
-        flood_prediction: "40",
-      },
-      {
-        date: "22th April 2024",
-        rainfall: "360",
-        flood_prediction: "40",
+        address: "No 2345, CDE Road, ABC place",
+        severity: "green",
+        point: { lat: "111111", lon: "11111" },
       },
     ]);
   }, []);
 
   const Export = () => {
     const data = items;
-    const fileName = "flood-prediction-data";
+    const fileName = "flood-severity";
     const exportType = exportFromJSON.types.csv;
     exportFromJSON({ data, fileName, exportType });
   };
+
+  const Delete = () => {};
 
   function Items({ currentItems }) {
     return (
@@ -81,9 +52,10 @@ const Tables = () => {
         <Table className="align-items-center table-flush" responsive>
           <thead className="thead-light">
             <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Rainfall</th>
-              <th scope="col">Flood Prediction Percentage</th>
+              <th scope="col">Address</th>
+              <th scope="col">Severity</th>
+              <th scope="col">Location Point</th>
+              <th scope="col" />
             </tr>
           </thead>
 
@@ -93,32 +65,44 @@ const Tables = () => {
                 .filter(
                   (row) =>
                     !searchedVal.length ||
-                    row.date
+                    row.address
                       .toString()
                       .toLowerCase()
                       .includes(searchedVal.toString().toLowerCase())
                 )
                 .map((row, i) => (
                   <tr key={i}>
-                    <td>{row.date}</td>
-                    <td>{row.rainfall} ml</td>
+                    <td>{row.address}</td>
                     <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2"> {row.flood_prediction} %</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value={`${row.flood_prediction}`}
-                            barClassName={
-                              Number(row.flood_prediction) >= 70
-                                ? "bg-gradient-danger"
-                                : Number(row.flood_prediction) > 50
-                                ? "bg-gradient-info"
-                                : "bg-gradient-success"
-                            }
-                          />
-                        </div>
-                      </div>
+                      {" "}
+                      <img
+                        alt="..."
+                        src={require(`assets/img/icons/common/triangle-${row.severity}.ico`)}
+                        height={24}
+                      />
+                    </td>
+                    <td>
+                      {row.point.lat} , {row.point.lon}
+                    </td>
+                    <td>
+                      {" "}
+                      <UncontrolledDropdown className="col-md-4 d-flex justify-content-end">
+                        <DropdownToggle
+                          className="btn-icon"
+                          href="#pablo"
+                          role="button"
+                          size="sm"
+                          color=""
+                        >
+                          <i
+                            className="fa fa-ellipsis-v"
+                            aria-hidden="true"
+                          ></i>
+                        </DropdownToggle>
+                        <DropdownMenu className="dropdown-menu-arrow" right>
+                          <DropdownItem onClick={Delete}>Delete</DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
                     </td>
                   </tr>
                 ))}
@@ -168,13 +152,13 @@ const Tables = () => {
           <div className="col">
             <Card className="shadow ">
               <CardHeader className="border-0 d-flex justify-content-between">
-                <h3 className="mb-0">Flood Record History Table</h3>
+                <h3 className="mb-0">Flood Severity Management</h3>
                 <div className="col-md-6 d-flex  align-items-center">
                   <div className="col-md-8">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search from Date"
+                      placeholder="Search from Address"
                       onChange={(e) => setSearchedVal(e.target.value)}
                     />
                   </div>
@@ -203,4 +187,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default FloodSeverity;
