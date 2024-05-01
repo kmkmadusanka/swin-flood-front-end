@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import {
   Card,
   CardHeader,
-
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-
   Progress,
   Table,
   Container,
@@ -96,8 +94,8 @@ const Tables = () => {
                       .toLowerCase()
                       .includes(searchedVal.toString().toLowerCase())
                 )
-                .map((row) => (
-                  <tr>
+                .map((row, i) => (
+                  <tr key={i}>
                     <td>{row.date}</td>
                     <td>{row.rainfall} ml</td>
                     <td>
@@ -111,8 +109,8 @@ const Tables = () => {
                               Number(row.flood_prediction) >= 70
                                 ? "bg-gradient-danger"
                                 : Number(row.flood_prediction) > 50
-                                  ? "bg-gradient-info"
-                                  : "bg-gradient-success"
+                                ? "bg-gradient-info"
+                                : "bg-gradient-success"
                             }
                           />
                         </div>

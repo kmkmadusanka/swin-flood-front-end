@@ -14,7 +14,6 @@ import {
   Col,
   CardImg,
   CardTitle,
-
   CardText,
 } from "reactstrap";
 
@@ -163,6 +162,7 @@ const Index = (props) => {
                 >
                   {locations.map((location, i) => (
                     <Marker
+                      key={i}
                       name={location.address}
                       title={location.address}
                       position={location.point}
@@ -196,7 +196,7 @@ const Index = (props) => {
                 </thead>
                 <tbody>
                   {predictions.map((p, i) => (
-                    <tr>
+                    <tr key={i}>
                       <th scope="row">{p.date}</th>
                       <td>{p.rainfall} mm</td>
                       <td>
@@ -210,8 +210,8 @@ const Index = (props) => {
                                 Number(p.prediction) >= 70
                                   ? "bg-gradient-danger"
                                   : Number(p.prediction) > 50
-                                    ? "bg-gradient-info"
-                                    : "bg-gradient-success"
+                                  ? "bg-gradient-info"
+                                  : "bg-gradient-success"
                               }
                             />
                           </div>
@@ -234,9 +234,9 @@ const Index = (props) => {
                   </div>
                 </Row>
               </CardHeader>
-              <row className="d-flex flex-row pl-3 mb-3">
+              <div className="d-flex flex-row pl-3 mb-3">
                 {preventionTips.map((tip, i) => (
-                  <Col>
+                  <Col key={i}>
                     <Card style={{ width: "23vw", minHeight: "50vh" }}>
                       <CardImg
                         alt="..."
@@ -252,7 +252,7 @@ const Index = (props) => {
                     </Card>
                   </Col>
                 ))}
-              </row>
+              </div>
             </Card>
           </Col>
         </Row>
@@ -263,5 +263,4 @@ const Index = (props) => {
 
 export default GoogleApiWrapper({
   apiKey: `${process.env.REACT_APP_GOOGLE_API_KEY}`,
-  version: 3.31,
 })(Index);

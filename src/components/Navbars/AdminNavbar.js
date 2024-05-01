@@ -77,7 +77,7 @@ const AdminNavbar = (props) => {
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm ">Language</span>
                   </Media>
-                  <i class="fa fa-arrow-down ml-2" aria-hidden="true"></i>
+                  <i className="fa fa-arrow-down ml-2" aria-hidden="true"></i>
                 </Media>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-arrow" right>

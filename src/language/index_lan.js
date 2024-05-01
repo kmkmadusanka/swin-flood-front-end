@@ -1,4 +1,4 @@
-export default {
+const language_object = {
   flood_severit: { sin: "ගංවතුර බරපතලකම", eng: "Flood Severity" },
   high: { sin: "අධි", eng: "High" },
   medium: { sin: "මධ්යම ", eng: "Medium" },
@@ -43,3 +43,5 @@ export default {
     eng: "In conjunction with a household emergency kit, a household emergency plan is essential for all Territorians. Regardless of any mitigation measures, every household must be prepared for extreme weather, including flooding.",
   },
 };
+
+export default language_object;

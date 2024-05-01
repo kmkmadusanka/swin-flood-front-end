@@ -75,6 +75,7 @@ class Maps extends Component {
               </CardTitle>
               {locations.map((location, i) => (
                 <Card
+                  key={i}
                   className="mb-2 pointer"
                   onClick={() =>
                     this.setState({
@@ -107,8 +108,9 @@ class Maps extends Component {
                 style={style}
                 className="limit-height ml-2"
               >
-                {locations.map((location) => (
+                {locations.map((location, i) => (
                   <Marker
+                    key={i}
                     name={location.address}
                     title={location.address}
                     onMouseover={this.onMouseoverMarker}
@@ -126,5 +128,4 @@ class Maps extends Component {
 
 export default GoogleApiWrapper({
   apiKey: `${process.env.REACT_APP_GOOGLE_API_KEY}`,
-  version: 3.31,
 })(Maps);
