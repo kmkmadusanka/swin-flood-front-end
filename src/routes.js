@@ -3,17 +3,27 @@ import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
+import Users from "views/examples/Users.js";
+import FloodSeverity from "views/examples/FloodSeverity.js";
 import FAQ from "views/examples/FAQ.js";
 import Discussion from "views/examples/discussions.js";
 import route_lan from "./language/routes_lan.js";
 
 let language = "eng";
+let role = "user";
 
 if (
   localStorage.getItem("lan") !== undefined &&
   localStorage.getItem("lan") !== null
 ) {
   language = localStorage.getItem("lan");
+}
+
+if (
+  localStorage.getItem("role") !== undefined &&
+  localStorage.getItem("role") !== null
+) {
+  role = localStorage.getItem("role");
 }
 
 let routes = [];
@@ -63,7 +73,27 @@ let commonRoutes = [
 ];
 
 if (localStorage.getItem("location") !== null) {
-  routes = [...commonRoutes];
+  if (role === "user") {
+    routes = [...commonRoutes];
+  } else {
+    routes = [
+      ...commonRoutes,
+      {
+        path: "/users",
+        name: route_lan.users[language],
+        icon: "ni ni-single-02",
+        component: <Users />,
+        layout: "/admin",
+      },
+      {
+        path: "/flood-severity",
+        name: route_lan.floodSeverity[language],
+        icon: "ni ni-archive-2",
+        component: <FloodSeverity />,
+        layout: "/admin",
+      },
+    ];
+  }
 } else {
   routes = [
     ...commonRoutes,

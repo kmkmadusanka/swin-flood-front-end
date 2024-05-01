@@ -33,7 +33,7 @@ const Header = () => {
       }
     };
 
-    fetchDataForPosts();
+    // fetchDataForPosts();
   }, []);
 
   useEffect(() => {
