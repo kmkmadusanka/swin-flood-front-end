@@ -4,24 +4,29 @@ import React, { useState, useEffect } from "react";
 import { Card, CardBody, Container } from "reactstrap";
 import Header from "components/Headers/Header.js";
 import "./styles/discussion.css";
+import { db } from "../../Firebase";
+import { collection, query, onSnapshot, addDoc } from "firebase/firestore";
 
 const Discussion = () => {
   const [position, setPosition] = useState({ latitude: null, longitude: null });
   const [attr, setAttr] = useState({
     showChatbox: false,
     showIcon: true,
-    messages: []
+    messages: [],
   });
 
   useEffect(() => {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function (pos) {
+      navigator.geolocation.getCurrentPosition(async function (pos) {
         setPosition({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
         });
 
-        if (localStorage.getItem('sos') !== undefined && localStorage.getItem('sos') === 'clicked') {
+        if (
+          localStorage.getItem("sos") !== undefined &&
+          localStorage.getItem("sos") === "clicked"
+        ) {
           setAttr({
             messages: attr.messages.concat({
               author: {
@@ -31,9 +36,15 @@ const Discussion = () => {
               },
               text: (
                 <p>
-                  <p ><p>Hi all,</p>
-                    <p>I am in a <strong>Emergency</strong> situation</p>
-                    <p>Could you please help me to get resolve this situation. My location is attached with folowing button</p>
+                  <p>
+                    <p>Hi all,</p>
+                    <p>
+                      I am in a <strong>Emergency</strong> situation
+                    </p>
+                    <p>
+                      Could you please help me to get resolve this situation. My
+                      location is attached with following button
+                    </p>
                   </p>
                 </p>
               ),
@@ -48,43 +59,93 @@ const Discussion = () => {
               timestamp: +new Date(),
             }),
           });
-          localStorage.removeItem('sos')
+          await addDoc(collection(db, "discussions"), {
+            author_id: 1,
+            text: `Hi all,\nI am in a #Emergency situation\nCould you please help me to get resolve this situation.\nMy location is attached with following button\n`,
+            location: `${pos.coords.latitude},${pos.coords.longitude}`,
+            type: "text",
+            timestamp: +new Date(),
+          });
+
+          localStorage.removeItem("sos");
         }
       });
     } else {
       console.log("Geolocation is not available in your browser.");
     }
-  }, [attr]);
 
+    fetchData();
+  }, []);
 
-
-  const handleOnSendMessage = (message) => {
-    setAttr({
-      messages: attr.messages.concat({
-        author: {
-          username: "You",
-          id: 1,
-          avatarUrl: "https://i.imgur.com/V3KudV0.png",
-        },
-        text: (
-          <p>
-            <p>{message}</p>
-          </p>
-        ),
-        buttons: [
-          {
-            type: "URL",
-            title: "Location",
-            payload: `http://maps.google.com/maps?q=${position.latitude},${position.longitude}`,
+  const fetchData = () => {
+    const q = query(collection(db, "discussions"));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let discussions = [];
+      querySnapshot.forEach((doc) => {
+        discussions.push({
+          author: {
+            username: doc.data().author_id === 1 ? "You" : "Others",
+            id: doc.data().author_id,
+            avatarUrl: "https://i.imgur.com/V3KudV0.png",
           },
-        ],
-        type: "text",
-        timestamp: +new Date(),
-      }),
+          text: doc.data().text,
+          buttons: [
+            {
+              type: "URL",
+              title: "Location",
+              payload: `http://maps.google.com/maps?q=${doc.data().location}`,
+            },
+          ],
+          type: "text",
+          timestamp: doc.data().timestamp,
+        });
+      });
+      discussions.sort((a, b) => a.timestamp - b.timestamp);
+      setAttr({
+        messages: discussions,
+      });
     });
+
+    return () => unsub();
   };
 
+  const handleOnSendMessage = async (message) => {
+    if (message !== "" && message !== null && message !== undefined) {
+      setAttr({
+        messages: attr.messages.concat({
+          author: {
+            username: "You",
+            id: 1,
+            avatarUrl: "https://i.imgur.com/V3KudV0.png",
+          },
+          text: (
+            <p>
+              <p>{message}</p>
+            </p>
+          ),
+          buttons: [
+            {
+              type: "URL",
+              title: "Location",
+              payload: `http://maps.google.com/maps?q=${position.latitude},${position.longitude}`,
+            },
+          ],
+          type: "text",
+          timestamp: +new Date(),
+        }),
+      });
 
+      await addDoc(collection(db, "discussions"), {
+        author_id: 1,
+        text: message,
+        location: `${position.latitude},${position.longitude}`,
+        type: "text",
+        timestamp: +new Date(),
+      });
+    } else {
+      alert("Please enter valid message!");
+    }
+  };
 
   return (
     <>

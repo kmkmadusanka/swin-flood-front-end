@@ -16,6 +16,7 @@ const Header = () => {
     ) {
       setLanguage(localStorage.getItem("lan"));
     }
+    // eslint-disable-next-line
     const fetchDataForPosts = async () => {
       try {
         const response = await fetch(
