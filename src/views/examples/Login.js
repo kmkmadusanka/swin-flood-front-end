@@ -53,6 +53,7 @@ class Login extends React.Component {
         .then((result) => {
           localStorage.setItem("location", JSON.stringify(result));
           localStorage.setItem("email", JSON.stringify(this.state.email));
+          localStorage.setItem("role", "admin");
           this.props.navigate(`/admin/index`);
           window.location.reload();
           this.setState({

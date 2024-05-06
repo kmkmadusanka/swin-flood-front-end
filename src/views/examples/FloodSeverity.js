@@ -63,7 +63,7 @@ const FloodSeverity = () => {
     alert(`${formData.address}, ${formData.severity}, ${formData.point}`);
   }
 
-  const toggleModal = (modal) => {
+  const toggleModal = () => {
     setDefaultModal(!defaultModal);
   };
 
@@ -212,7 +212,7 @@ const FloodSeverity = () => {
                       type="button"
                       size="sm"
                       className="btn-info "
-                      onClick={() => toggleModal("defaultModal")}
+                      onClick={toggleModal}
                     >
                       Add
                     </Button>
@@ -240,7 +240,7 @@ const FloodSeverity = () => {
         className="modal-dialog-centered"
         size="sm"
         isOpen={defaultModal}
-        toggle={() => toggleModal("defaultModal")}
+        toggle={toggleModal}
       >
         <div className="modal-body p-0">
           <Card className="bg-secondary shadow border-0">
