@@ -9,6 +9,13 @@ import {
   Table,
   Container,
   Row,
+  Button,
+  CardBody,
+  FormGroup,
+  Form,
+  Input,
+  InputGroup,
+  Modal,
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
@@ -21,6 +28,44 @@ import "../examples/styles/table.css";
 const FloodSeverity = () => {
   const [searchedVal, setSearchedVal] = useState("");
   const [items, setItems] = useState([]);
+  const [defaultModal, setDefaultModal] = useState(false);
+  const [formData, setFormData] = useState({
+    address: "",
+    severity: "",
+    point: "",
+  });
+
+  function handleChange(event) {
+    if (event.target.name === "address") {
+      setFormData({
+        address: event.target.value,
+        severity: formData.severity,
+        point: formData.point,
+      });
+    }
+    if (event.target.name === "severity") {
+      setFormData({
+        address: formData.address,
+        severity: event.target.value,
+        point: formData.point,
+      });
+    }
+    if (event.target.name === "point") {
+      setFormData({
+        address: formData.address,
+        severity: formData.severity,
+        point: event.target.value,
+      });
+    }
+  }
+
+  function handleSubmit(event) {
+    alert(`${formData.address}, ${formData.severity}, ${formData.point}`);
+  }
+
+  const toggleModal = () => {
+    setDefaultModal(!defaultModal);
+  };
 
   useEffect(() => {
     setItems([
@@ -153,7 +198,7 @@ const FloodSeverity = () => {
             <Card className="shadow ">
               <CardHeader className="border-0 d-flex justify-content-between">
                 <h3 className="mb-0">Flood Severity Management</h3>
-                <div className="col-md-6 d-flex  align-items-center">
+                <div className="col-md-8 d-flex  align-items-end">
                   <div className="col-md-8">
                     <input
                       type="text"
@@ -162,7 +207,15 @@ const FloodSeverity = () => {
                       onChange={(e) => setSearchedVal(e.target.value)}
                     />
                   </div>
-                  <UncontrolledDropdown className="col-md-4 d-flex justify-content-end">
+                  <UncontrolledDropdown className="col-md-4 d-flex justify-content-center">
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="btn-info "
+                      onClick={toggleModal}
+                    >
+                      Add
+                    </Button>
                     <DropdownToggle
                       className="btn-info"
                       href="#pablo"
@@ -183,6 +236,64 @@ const FloodSeverity = () => {
           </div>
         </Row>
       </Container>
+      <Modal
+        className="modal-dialog-centered"
+        size="sm"
+        isOpen={defaultModal}
+        toggle={toggleModal}
+      >
+        <div className="modal-body p-0">
+          <Card className="bg-secondary shadow border-0">
+            <CardBody className="px-lg-5 py-lg-5">
+              <div className="text-center text-muted mb-4">
+                <small>Add Severity Location</small>
+              </div>
+              <Form role="form" onSubmit={handleSubmit}>
+                <FormGroup className="mb-3">
+                  <InputGroup className="input-group-alternative">
+                    <Input
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      placeholder="Address"
+                    />
+                  </InputGroup>
+                </FormGroup>
+
+                <select
+                  className="col-12 input-group-alternative py-2 mb-3"
+                  aria-label="Default select example"
+                  name="severity"
+                  value={formData.severity}
+                  onChange={handleChange}
+                >
+                  <option selected>Select Severity</option>
+                  <option value="red">Red</option>
+                  <option value="blue">Blue</option>
+                  <option value="green">Green</option>
+                </select>
+
+                <FormGroup className="mb-3">
+                  <InputGroup className="input-group-alternative">
+                    <Input
+                      name="point"
+                      value={formData.point}
+                      onChange={handleChange}
+                      placeholder="Location Point"
+                    />
+                  </InputGroup>
+                </FormGroup>
+
+                <div className="text-center">
+                  <Button className="mt-4" color="primary" type="submit">
+                    Add
+                  </Button>
+                </div>
+              </Form>
+            </CardBody>
+          </Card>
+        </div>
+      </Modal>
     </>
   );
 };

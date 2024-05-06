@@ -18,6 +18,7 @@ const AdminNavbar = (props) => {
     if (ans) {
       localStorage.removeItem("email");
       localStorage.removeItem("location");
+      localStorage.removeItem("role");
       window.location.reload();
     }
   }
