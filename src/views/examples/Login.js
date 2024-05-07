@@ -15,6 +15,9 @@ import {
   InputGroup,
   Col,
 } from "reactstrap";
+import { db } from "../../Firebase";
+import { query, where, collection, getDocs } from "firebase/firestore";
+const citiesRef = collection(db, "users");
 
 class Login extends React.Component {
   constructor(props) {
@@ -38,7 +41,8 @@ class Login extends React.Component {
     }
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
+    event.preventDefault();
     if (
       this.state.email !== null &&
       this.state.email !== undefined &&
@@ -49,23 +53,50 @@ class Login extends React.Component {
       this.setState({
         loading: true,
       });
-      accessLocation()
-        .then((result) => {
-          localStorage.setItem("location", JSON.stringify(result));
-          localStorage.setItem("email", JSON.stringify(this.state.email));
-          localStorage.setItem("role", "admin");
-          this.props.navigate(`/admin/index`);
-          window.location.reload();
-          this.setState({
-            loading: false,
-          });
-        })
-        .catch(() => {
-          alert("Can not Access Location!");
-          this.setState({
-            loading: false,
-          });
+
+      console.log("ssssss");
+
+      const q = await query(
+        citiesRef,
+        where("email", "==", this.state.email),
+        where("password", "==", this.state.password)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const users = [];
+      querySnapshot.forEach((doc) => {
+        users.push({
+          id: doc.id,
+          name: doc.data().name,
+          email: doc.data().email,
+          role: doc.data().role,
         });
+      });
+      if (users.length > 0) {
+        accessLocation()
+          .then((result) => {
+            localStorage.setItem("location", JSON.stringify(result));
+            localStorage.setItem("email", JSON.stringify(this.state.email));
+            localStorage.setItem("name", users[0]["name"]);
+            localStorage.setItem("role", users[0]["role"]);
+            this.props.navigate(`/admin/index`);
+            window.location.reload();
+            this.setState({
+              loading: false,
+            });
+          })
+          .catch(() => {
+            alert("Can not Access Location!");
+            this.setState({
+              loading: false,
+            });
+          });
+      } else {
+        this.setState({
+          loading: false,
+        });
+        alert("Invalid email or password!");
+      }
     }
 
     function accessLocation() {

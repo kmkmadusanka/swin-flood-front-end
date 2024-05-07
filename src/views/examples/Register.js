@@ -1,3 +1,6 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   Card,
@@ -12,7 +15,49 @@ import {
   Col,
 } from "reactstrap";
 
+import { db } from "../../Firebase";
+import { collection, addDoc } from "firebase/firestore";
+
 const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  let navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      name &&
+      name !== "" &&
+      email &&
+      email !== "" &&
+      password &&
+      password !== ""
+    ) {
+      try {
+        await addDoc(collection(db, "users"), {
+          name: name,
+          email: email,
+          password: password,
+          role: "user",
+        }).catch((e) => {
+          alert(e);
+        });
+        setName("");
+        setEmail("");
+        setPassword("");
+
+        alert("Successfully Registered!");
+
+        navigate(`/auth/login`);
+      } catch (error) {
+        alert(error);
+      }
+    } else {
+      alert("Enter Correct values");
+    }
+  };
+
   return (
     <>
       <Col lg="6" md="8">
@@ -21,7 +66,7 @@ const Register = () => {
             <div className="text-center text-muted mb-4">
               <small>Sign up with credentials</small>
             </div>
-            <Form role="form">
+            <Form role="form" onSubmit={handleSubmit}>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -29,7 +74,13 @@ const Register = () => {
                       <i className="ni ni-hat-3" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Name" type="text" />
+                  <Input
+                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Name"
+                    type="text"
+                  />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -40,6 +91,9 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
@@ -54,6 +108,9 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
@@ -84,7 +141,7 @@ const Register = () => {
                 </Col>
               </Row>
               <div className="text-center">
-                <Button className="mt-4" color="primary" type="button">
+                <Button className="mt-4" color="primary" type="submit">
                   Create account
                 </Button>
               </div>
