@@ -71,7 +71,7 @@ const Discussion = () => {
         }
       });
     } else {
-      console.log("Geolocation is not available in your browser.");
+      alert("Geolocation is not available in your browser.");
     }
 
     fetchData();
@@ -110,38 +110,42 @@ const Discussion = () => {
   };
 
   const handleOnSendMessage = async (message) => {
+
     if (message !== "" && message !== null && message !== undefined) {
-      setAttr({
-        messages: attr.messages.concat({
-          author: {
-            username: "You",
-            id: 1,
-            avatarUrl: "https://i.imgur.com/V3KudV0.png",
-          },
-          text: (
-            <p>
-              <p>{message}</p>
-            </p>
-          ),
-          buttons: [
-            {
-              type: "URL",
-              title: "Location",
-              payload: `http://maps.google.com/maps?q=${position.latitude},${position.longitude}`,
+      if (window.confirm('Do you want to sent this message?')) {
+        setAttr({
+          messages: attr.messages.concat({
+            author: {
+              username: "You",
+              id: 1,
+              avatarUrl: "https://i.imgur.com/V3KudV0.png",
             },
-          ],
+            text: (
+              <p>
+                <p>{message}</p>
+              </p>
+            ),
+            buttons: [
+              {
+                type: "URL",
+                title: "Location",
+                payload: `http://maps.google.com/maps?q=${position.latitude},${position.longitude}`,
+              },
+            ],
+            type: "text",
+            timestamp: +new Date(),
+          }),
+        });
+
+        await addDoc(collection(db, "discussions"), {
+          author_id: 1,
+          text: message,
+          location: `${position.latitude},${position.longitude}`,
           type: "text",
           timestamp: +new Date(),
-        }),
-      });
+        });
+      }
 
-      await addDoc(collection(db, "severities"), {
-        author_id: 1,
-        text: message,
-        location: `${position.latitude},${position.longitude}`,
-        type: "text",
-        timestamp: +new Date(),
-      });
     } else {
       alert("Please enter valid message!");
     }

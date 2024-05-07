@@ -14,9 +14,21 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
+import * as Yup from "yup";
 import { db } from "../../Firebase";
 import { collection, addDoc } from "firebase/firestore";
+
+const schema = Yup.object().shape({
+  name: Yup.string().min(3).max(100),
+  email: Yup.string()
+    .trim()
+    .matches(
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Email is not in correct format"
+    )
+    .required(),
+  password: Yup.string().required().min(6).max(25),
+});
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -26,36 +38,34 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      name &&
-      name !== "" &&
-      email &&
-      email !== "" &&
-      password &&
-      password !== ""
-    ) {
-      try {
-        await addDoc(collection(db, "users"), {
-          name: name,
-          email: email,
-          password: password,
-          role: "user",
-        }).catch((e) => {
-          alert(e);
-        });
-        setName("");
-        setEmail("");
-        setPassword("");
 
-        alert("Successfully Registered!");
+    try {
+      await schema.validate({
+        name,
+        email,
+        password,
+      });
 
-        navigate(`/auth/login`);
-      } catch (error) {
-        alert(error);
-      }
-    } else {
-      alert("Enter Correct values");
+      await addDoc(collection(db, "users"), {
+        name: name,
+        email: email,
+        password: password,
+        role: "user",
+      }).catch((e) => {
+        alert(e);
+      });
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      alert("Successfully Registered!");
+
+      navigate(`/auth/login`);
+
+    } catch (error) {
+      alert(error)
     }
+
   };
 
   return (
@@ -118,28 +128,7 @@ const Register = () => {
                 </InputGroup>
               </FormGroup>
 
-              <Row className="my-4">
-                <Col xs="12">
-                  <div className="custom-control custom-control-alternative custom-checkbox">
-                    <input
-                      className="custom-control-input"
-                      id="customCheckRegister"
-                      type="checkbox"
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="customCheckRegister"
-                    >
-                      <span className="text-muted">
-                        I agree with the{" "}
-                        <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                          Privacy Policy
-                        </a>
-                      </span>
-                    </label>
-                  </div>
-                </Col>
-              </Row>
+
               <div className="text-center">
                 <Button className="mt-4" color="primary" type="submit">
                   Create account

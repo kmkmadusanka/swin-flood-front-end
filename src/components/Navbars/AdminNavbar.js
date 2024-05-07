@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 
 const AdminNavbar = (props) => {
-  const userEmail = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
   function signOut() {
     const ans = window.confirm("DO you want to logout ? ");
     if (ans) {
@@ -41,7 +41,7 @@ const AdminNavbar = (props) => {
             {props.brandText}
           </Link>
           <Nav className="align-items-center d-none d-md-flex" navbar>
-            {userEmail !== null ? (
+            {name !== null ? (
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
@@ -53,7 +53,7 @@ const AdminNavbar = (props) => {
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
-                        {JSON.parse(userEmail)}
+                        {name}
                       </span>
                     </Media>
                   </Media>
