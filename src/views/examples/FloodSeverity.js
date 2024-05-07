@@ -17,6 +17,7 @@ import {
   InputGroup,
   Modal,
 } from "reactstrap";
+import * as Yup from "yup";
 // core components
 import Header from "components/Headers/Header.js";
 // excel download
@@ -34,6 +35,15 @@ import {
 } from "firebase/firestore";
 
 import "../examples/styles/table.css";
+
+const schema = Yup.object().shape({
+  address: Yup.string()
+    .trim()
+    .min(6)
+    .required(),
+  severity: Yup.string().required(),
+  point: Yup.string().required().matches(/^([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?,([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?$/, "Location point should contain latitude and longitude seperated by comma!"),
+});
 
 const FloodSeverity = () => {
   const [searchedVal, setSearchedVal] = useState("");
@@ -53,32 +63,25 @@ const FloodSeverity = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      address &&
-      address !== "" &&
-      severity &&
-      severity !== "" &&
-      point &&
-      point !== ""
-    ) {
-      try {
-        await addDoc(collection(db, "severities"), {
-          address: address,
-          severity: severity,
-          point: point,
-        }).catch((e) => {
-          alert(e);
-        });
-        setAddress("");
-        setPoint("");
-        setSeverity("");
-        setDefaultModal(false);
-      } catch (error) {
-        alert(error);
-      }
-    } else {
-      alert("Enter Correct values");
+    try {
+      await schema.validate({
+        address, severity, point
+      });
+      await addDoc(collection(db, "severities"), {
+        address: address,
+        severity: severity,
+        point: point,
+      }).catch((e) => {
+        alert(e);
+      });
+      setAddress("");
+      setPoint("");
+      setSeverity("");
+      setDefaultModal(false);
+    } catch (error) {
+      alert(error)
     }
+
   };
 
   const fetchData = () => {

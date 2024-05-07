@@ -30,11 +30,21 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import * as Yup from "yup";
 
 const style = {
   width: "146%",
   height: "70vh",
 };
+
+const schema = Yup.object().shape({
+  address: Yup.string()
+    .trim()
+    .min(6)
+    .required(),
+  distance: Yup.number().required(),
+  point: Yup.string().required().matches(/^([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?,([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?$/, "Location point should contain latitude and longitude seperated by comma!"),
+});
 
 class Maps extends Component {
   constructor(props) {
@@ -45,7 +55,7 @@ class Maps extends Component {
         lng: process.env.REACT_APP_DEFAULT_LOCATION_LON,
       },
       address: "",
-      distance: "",
+      distance: null,
       location_point: "",
       role: "NA",
       zoom: 13,
@@ -134,22 +144,32 @@ class Maps extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+
+
+
+
     try {
-      await addDoc(collection(db, "safeLocations"), {
+      const formData = {
         address: this.state.address,
         distance: this.state.distance,
         point: this.state.location_point,
+      };
+
+      await schema.validate(formData);
+
+      await addDoc(collection(db, "safeLocations"), formData);
+
+      this.setState({
+        address: "",
+        distance: "",
+        location_point: "",
+        formModal: false,
       });
     } catch (error) {
-      alert(error);
+      alert(error)
     }
 
-    this.setState({
-      address: "",
-      distance: "",
-      location_point: "",
-      formModal: false,
-    });
+
   };
   render() {
     return (
