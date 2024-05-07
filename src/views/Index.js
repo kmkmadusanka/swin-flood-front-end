@@ -213,8 +213,8 @@ const Index = (props) => {
                                 Number(p.prediction) >= 70
                                   ? "bg-gradient-danger"
                                   : Number(p.prediction) > 50
-                                  ? "bg-gradient-info"
-                                  : "bg-gradient-success"
+                                    ? "bg-gradient-info"
+                                    : "bg-gradient-success"
                               }
                             />
                           </div>
@@ -226,8 +226,8 @@ const Index = (props) => {
               </Table>
             </Card>
           </Col>
-          <Col className="mb-5 mb-xl-0 mt-5" xl="12">
-            <Card className="shadow">
+          <Col className="mb-5 mb-xl-0 mt-5 col-md-12" >
+            <Card className="shadow col-md-12">
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
@@ -237,14 +237,15 @@ const Index = (props) => {
                   </div>
                 </Row>
               </CardHeader>
-              <div className="d-flex flex-row pl-3 mb-3">
+              <div className=" pl-3 mb-3 row">
                 {preventionTips.map((tip, i) => (
-                  <Col key={i}>
-                    <Card style={{ width: "23vw", minHeight: "50vh" }}>
+                  <div className="col-md-4 col-sm-4 col-lg-4 mb-1" key={i}>
+                    <Card >
                       <CardImg
                         alt="..."
                         src={require(`assets/img/detailed/${tip.image}`)}
                         top
+
                       />
                       <CardBody>
                         <CardTitle>{tip.title}</CardTitle>
@@ -253,7 +254,8 @@ const Index = (props) => {
                         </CardText>
                       </CardBody>
                     </Card>
-                  </Col>
+                  </div>
+
                 ))}
               </div>
             </Card>
