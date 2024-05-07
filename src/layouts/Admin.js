@@ -9,6 +9,7 @@ import { Container, Button } from "react-floating-action-button";
 import { useNavigate } from "react-router-dom";
 
 import routes from "routes.js";
+import { startListener } from "../util/remoteEventPublisher";
 
 const Admin = (props) => {
   const mainContent = React.useRef(null);
@@ -28,6 +29,10 @@ const Admin = (props) => {
     document.scrollingElement.scrollTop = 0;
     mainContent.current.scrollTop = 0;
   }, [location]);
+
+  React.useEffect(() => {
+    startListener();
+  }, []);
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {

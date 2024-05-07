@@ -6,6 +6,7 @@ import Header from "components/Headers/Header.js";
 import "./styles/discussion.css";
 import { db } from "../../Firebase";
 import { collection, query, onSnapshot, addDoc } from "firebase/firestore";
+import { startListener } from "../../util/remoteEventPublisher";
 
 const Discussion = () => {
   const [position, setPosition] = useState({ latitude: null, longitude: null });
@@ -67,6 +68,8 @@ const Discussion = () => {
             type: "text",
             timestamp: +new Date(),
           }))
+
+          startListener();
 
           await addDoc(collection(db, "discussions"), {
             author_id: 1,

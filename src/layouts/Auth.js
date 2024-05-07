@@ -3,6 +3,8 @@ import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 // reactstrap components
 import { Container, Row } from "reactstrap";
 
+import { startListener } from "../util/remoteEventPublisher";
+
 // core components
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 
@@ -23,6 +25,10 @@ const Auth = (props) => {
     document.scrollingElement.scrollTop = 0;
     mainContent.current.scrollTop = 0;
   }, [location]);
+
+  React.useEffect(() => {
+    startListener();
+  }, []);
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
