@@ -59,6 +59,13 @@ const Discussion = () => {
               timestamp: +new Date(),
             }),
           });
+          localStorage.setItem("SOS_DATA", JSON.stringify({
+            author_id: 1,
+            text: `Hi all,\nI am in a #Emergency situation\nCould you please help me to get resolve this situation.\nMy location is attached with following button\n`,
+            location: `${pos.coords.latitude},${pos.coords.longitude}`,
+            type: "text",
+            timestamp: +new Date(),
+          }))
           await addDoc(collection(db, "discussions"), {
             author_id: 1,
             text: `Hi all,\nI am in a #Emergency situation\nCould you please help me to get resolve this situation.\nMy location is attached with following button\n`,
