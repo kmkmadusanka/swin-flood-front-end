@@ -66,6 +66,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^15.0.7",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.9"
   },

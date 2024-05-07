@@ -56,6 +56,7 @@ const Header = () => {
                         <CardTitle
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
+                          data-testid="temp-val"
                         >
                           {header.temperature[language]}
                         </CardTitle>
@@ -86,6 +87,7 @@ const Header = () => {
                         <CardTitle
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
+                          data-testid="humidity-val"
                         >
                           {header.humidity[language]}
                         </CardTitle>
@@ -117,6 +119,7 @@ const Header = () => {
                         <CardTitle
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
+                          data-testid="wind-val"
                         >
                           {header.wind_speed[language]}
                         </CardTitle>
@@ -147,6 +150,7 @@ const Header = () => {
                         <CardTitle
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
+                          data-testid="pressure-val"
                         >
                           {header.pressure[language]}
                         </CardTitle>
