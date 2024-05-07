@@ -17,30 +17,42 @@ import exportFromJSON from "export-from-json";
 import ReactPaginate from "react-paginate";
 
 import "../examples/styles/table.css";
+import { db } from "../../Firebase";
+import {
+  collection,
+  query,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 const Users = () => {
   const [searchedVal, setSearchedVal] = useState("");
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    setItems([
-      {
-        name: "Kasun Madusanka",
-        email: "kasun@gmail.com",
-        role: "admin",
-      },
-      {
-        name: "Kamal Perera",
-        email: "kamal@gmail.com",
-        role: "user",
-      },
-      {
-        name: "Amal Perera",
-        email: "amal@gmail.com",
-        role: "user",
-      },
-    ]);
+    fetchData();
   }, []);
+
+  const fetchData = () => {
+    const q = query(collection(db, "users"));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let data = [];
+      querySnapshot.forEach((doc) => {
+        const inner_data = doc.data();
+        data.push({
+          id: doc.id,
+          name: inner_data.name,
+          email: inner_data.email,
+          role: inner_data.role,
+        });
+      });
+      data.sort((a, b) => a.severity - b.severity);
+      setItems(data);
+    });
+
+    return () => unsub();
+  };
 
   const Export = () => {
     const data = items;
@@ -49,7 +61,9 @@ const Users = () => {
     exportFromJSON({ data, fileName, exportType });
   };
 
-  const Delete = () => {};
+  const Delete = async (id) => {
+    await deleteDoc(doc(db, "users", id));
+  };
 
   function Items({ currentItems }) {
     return (
@@ -96,7 +110,9 @@ const Users = () => {
                           ></i>
                         </DropdownToggle>
                         <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem onClick={Delete}>Delete</DropdownItem>
+                          <DropdownItem onClick={() => Delete(row.id)}>
+                            Delete
+                          </DropdownItem>
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
