@@ -137,7 +137,7 @@ class Login extends React.Component {
           <Card className="bg-secondary shadow border-0">
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small> Sign in with credentials </small>{" "}
+                <small> Sign in with credentials </small>
               </div>
               <Form role="form" onSubmit={this.handleSubmit}>
                 <FormGroup className="mb-3">
@@ -145,8 +145,8 @@ class Login extends React.Component {
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="ni ni-email-83" />
-                      </InputGroupText>{" "}
-                    </InputGroupAddon>{" "}
+                      </InputGroupText>
+                    </InputGroupAddon>
                     <Input
                       name="email"
                       value={this.state.email}
@@ -155,15 +155,15 @@ class Login extends React.Component {
                       type="email"
                       autoComplete="new-email"
                     />
-                  </InputGroup>{" "}
-                </FormGroup>{" "}
+                  </InputGroup>
+                </FormGroup>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="ni ni-lock-circle-open" />
-                      </InputGroupText>{" "}
-                    </InputGroupAddon>{" "}
+                      </InputGroupText>
+                    </InputGroupAddon>
                     <Input
                       name="password"
                       value={this.state.password}
@@ -172,7 +172,7 @@ class Login extends React.Component {
                       type="password"
                       autoComplete="new-password"
                     />
-                  </InputGroup>{" "}
+                  </InputGroup>
                 </FormGroup>
                 <div className="text-center d-flex align-items-center flex-column">
                   <Button
@@ -182,7 +182,7 @@ class Login extends React.Component {
                     value="Submit"
                   >
                     Sign in
-                  </Button>{" "}
+                  </Button>
                   {this.state.loading ? (
                     <ReactLoading
                       className="text-center"
@@ -193,12 +193,12 @@ class Login extends React.Component {
                     />
                   ) : (
                     <> </>
-                  )}{" "}
-                </div>{" "}
-              </Form>{" "}
-            </CardBody>{" "}
-          </Card>{" "}
-        </Col>{" "}
+                  )}
+                </div>
+              </Form>
+            </CardBody>
+          </Card>
+        </Col>
       </>
     );
   }
