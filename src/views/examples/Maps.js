@@ -78,7 +78,6 @@ class Maps extends Component {
     const q = query(collection(db, "safeLocations"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       let data = [];
-      console.log("querySnapshot", querySnapshot);
       querySnapshot.forEach((doc) => {
         const inner_data = doc.data();
         data.push({
@@ -183,7 +182,7 @@ class Maps extends Component {
             </div>
           </Row>
           <div className="row col-12 p-0 m-0 ">
-            <Card className="col-4  py-2 side-card">
+            <Card className="col-md-4 col-sm-12  col-lg-4 py-2 side-card">
               <div className=" d-flex">
                 <CardTitle>
                   <h2 className="pl-2 mb-0">Safe Locations </h2>
@@ -315,7 +314,7 @@ class Maps extends Component {
                 </Card>
               ))}
             </Card>
-            <div className="col-8">
+            <div className="col-md-8 col-sm-12">
               <Map
                 google={this.props.google}
                 zoom={this.state.zoom}

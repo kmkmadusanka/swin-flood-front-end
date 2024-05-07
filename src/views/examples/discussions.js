@@ -71,7 +71,7 @@ const Discussion = () => {
         }
       });
     } else {
-      console.log("Geolocation is not available in your browser.");
+      alert("Geolocation is not available in your browser.");
     }
 
     fetchData();
