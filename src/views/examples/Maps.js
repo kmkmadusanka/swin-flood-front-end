@@ -21,34 +21,20 @@ import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import "./styles/maps.css";
 // core components
 import Header from "components/Headers/Header.js";
+import { db } from "../../Firebase";
+import {
+  collection,
+  query,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 const style = {
   width: "146%",
   height: "70vh",
 };
-
-const locations = [
-  {
-    point: { lat: 8.534487235852568, lng: 80.29865337839264 },
-    address: "No 1234, ABC Road, XYZ place",
-    distance_from_location: "2",
-  },
-  {
-    point: { lat: 8.543207218523076, lng: 80.29468095325936 },
-    address: "No 2345, CDE Road, ABC place",
-    distance_from_location: "5",
-  },
-  {
-    point: { lat: 8.496783908472604, lng: 80.29444347595162 },
-    address: "No 3456, EFG Road, CDE place",
-    distance_from_location: "10",
-  },
-  {
-    point: { lat: 8.487702130663347, lng: 80.31660802467319 },
-    address: "No 7890, DFG Road, HJK place",
-    distance_from_location: "10",
-  },
-];
 
 class Maps extends Component {
   constructor(props) {
@@ -58,21 +44,51 @@ class Maps extends Component {
         lat: process.env.REACT_APP_DEFAULT_LOCATION_LAT,
         lng: process.env.REACT_APP_DEFAULT_LOCATION_LON,
       },
-      formData: { address: "", distance: "", point: "" },
+      address: "",
+      distance: "",
+      location_point: "",
       role: "NA",
       zoom: 13,
       formModal: false,
+      locations: [],
     };
   }
 
   toggleModal = () => {
-    console.log(this.state.formModal);
     this.setState({
       formModal: !this.state.formModal,
     });
   };
 
-  Delete = () => {};
+  Delete = async (id) => {
+    await deleteDoc(doc(db, "safeLocations", id));
+  };
+
+  fetchData = () => {
+    const q = query(collection(db, "safeLocations"));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let data = [];
+      console.log("querySnapshot", querySnapshot);
+      querySnapshot.forEach((doc) => {
+        const inner_data = doc.data();
+        data.push({
+          id: doc.id,
+          address: inner_data.address,
+          distance: inner_data.distance,
+          point: {
+            lat: inner_data.point.split(",")[0],
+            lng: inner_data.point.split(",")[1],
+          },
+        });
+      });
+      data.sort((a, b) => a.distance - b.distance);
+      this.setState({
+        locations: data,
+      });
+    });
+
+    return () => unsub();
+  };
 
   componentDidMount() {
     if (
@@ -94,13 +110,47 @@ class Maps extends Component {
         role: localStorage.getItem("role"),
       });
     }
+
+    this.fetchData();
   }
 
-  handleChange(event) {}
+  handleChange = (event) => {
+    if (event.target.name === "address") {
+      this.setState({
+        address: event.target.value,
+      });
+    }
+    if (event.target.name === "distance") {
+      this.setState({
+        distance: event.target.value,
+      });
+    }
+    if (event.target.name === "point") {
+      this.setState({
+        location_point: event.target.value,
+      });
+    }
+  };
 
-  handleSubmit(event) {
-    alert(`ook`);
-  }
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addDoc(collection(db, "safeLocations"), {
+        address: this.state.address,
+        distance: this.state.distance,
+        point: this.state.location_point,
+      });
+    } catch (error) {
+      alert(error);
+    }
+
+    this.setState({
+      address: "",
+      distance: "",
+      location_point: "",
+      formModal: false,
+    });
+  };
   render() {
     return (
       <>
@@ -151,31 +201,30 @@ class Maps extends Component {
                           <InputGroup className="input-group-alternative">
                             <Input
                               name="address"
-                              value={this.state.formData.address}
+                              value={this.state.address}
                               onChange={this.handleChange}
                               placeholder="Address"
                             />
                           </InputGroup>
                         </FormGroup>
 
-                        <select
-                          className="col-12 input-group-alternative py-2 mb-3"
-                          aria-label="Default select example"
-                          name="severity"
-                          value={this.state.formData.severity}
-                          onChange={this.handleChange}
-                        >
-                          <option selected>Select Severity</option>
-                          <option value="red">Red</option>
-                          <option value="blue">Blue</option>
-                          <option value="green">Green</option>
-                        </select>
+                        <FormGroup className="mb-3">
+                          <InputGroup className="input-group-alternative">
+                            <Input
+                              name="distance"
+                              type="number"
+                              value={this.state.distance}
+                              onChange={this.handleChange}
+                              placeholder="distance"
+                            />
+                          </InputGroup>
+                        </FormGroup>
 
                         <FormGroup className="mb-3">
                           <InputGroup className="input-group-alternative">
                             <Input
                               name="point"
-                              value={this.state.formData.point}
+                              value={this.state.location_point}
                               onChange={this.handleChange}
                               placeholder="Location Point"
                             />
@@ -196,7 +245,7 @@ class Maps extends Component {
                   </Card>
                 </div>
               </Modal>
-              {locations.map((location, i) => (
+              {this.state.locations.map((location, i) => (
                 <Card
                   key={i}
                   className="mb-2 pointer"
@@ -210,8 +259,7 @@ class Maps extends Component {
                   <CardBody className="d-flex col-12 px-0 mx-0">
                     <div className="col-10">
                       <CardTitle tag="h5" className="text-muted mb-0">
-                        {i + Math.floor(Math.random() * 3)} Km from your
-                        location
+                        {location.distance} Km from your location
                       </CardTitle>
                       <span className="h4 mb-0">{location.address}</span>
                     </div>
@@ -232,7 +280,9 @@ class Maps extends Component {
                           </DropdownToggle>
 
                           <DropdownMenu className="dropdown-menu-arrow" right>
-                            <DropdownItem onClick={this.Delete}>
+                            <DropdownItem
+                              onClick={() => this.Delete(location.id)}
+                            >
                               Delete
                             </DropdownItem>
                           </DropdownMenu>
@@ -255,7 +305,7 @@ class Maps extends Component {
                 style={style}
                 className="limit-height col-md-8 px-0 mx-0"
               >
-                {locations.map((location, i) => (
+                {this.state.locations.map((location, i) => (
                   <Marker
                     key={i}
                     name={location.address}

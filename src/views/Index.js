@@ -20,6 +20,8 @@ import {
 import Header from "components/Headers/Header.js";
 
 import index_lan from "../language/index_lan.js";
+import { db } from "../Firebase";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 const style = {
   width: "95%",
@@ -53,29 +55,7 @@ const Index = (props) => {
     }
   }, []);
   useEffect(() => {
-    // set locations into the component
-    setLocations([
-      {
-        point: { lat: 8.534487235852568, lng: 80.29865337839264 },
-        address: "No 1234, ABC Road, XYZ place",
-        severity: "red",
-      },
-      {
-        point: { lat: 8.543207218523076, lng: 80.29468095325936 },
-        address: "No 2345, CDE Road, ABC place",
-        severity: "green",
-      },
-      {
-        point: { lat: 8.496783908472604, lng: 80.29444347595162 },
-        address: "No 3456, EFG Road, CDE place",
-        severity: "blue",
-      },
-      {
-        point: { lat: 8.487702130663347, lng: 80.31660802467319 },
-        address: "No 7890, DFG Road, HJK place",
-        severity: "red",
-      },
-    ]);
+    fetchSeverityData();
     // flood prevention tips
 
     // set prediction data
@@ -89,6 +69,29 @@ const Index = (props) => {
       { date: "24th April", rainfall: "60", prediction: "30" },
     ]);
   }, []);
+
+  const fetchSeverityData = () => {
+    const q = query(collection(db, "severities"));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let data = [];
+      querySnapshot.forEach((doc) => {
+        const inner_data = doc.data();
+        data.push({
+          id: doc.id,
+          address: inner_data.address,
+          severity: inner_data.severity,
+          point: {
+            lat: inner_data.point.split(",")[0],
+            lng: inner_data.point.split(",")[1],
+          },
+        });
+      });
+      data.sort((a, b) => a.severity - b.severity);
+      setLocations(data);
+    });
+
+    return () => unsub();
+  };
 
   const preventionTips = [
     {

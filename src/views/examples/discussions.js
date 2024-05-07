@@ -135,7 +135,7 @@ const Discussion = () => {
         }),
       });
 
-      await addDoc(collection(db, "discussions"), {
+      await addDoc(collection(db, "severities"), {
         author_id: 1,
         text: message,
         location: `${position.latitude},${position.longitude}`,

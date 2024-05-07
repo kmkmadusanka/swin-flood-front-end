@@ -23,64 +23,83 @@ import Header from "components/Headers/Header.js";
 import exportFromJSON from "export-from-json";
 import ReactPaginate from "react-paginate";
 
+import { db } from "../../Firebase";
+import {
+  collection,
+  query,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+
 import "../examples/styles/table.css";
 
 const FloodSeverity = () => {
   const [searchedVal, setSearchedVal] = useState("");
   const [items, setItems] = useState([]);
   const [defaultModal, setDefaultModal] = useState(false);
-  const [formData, setFormData] = useState({
-    address: "",
-    severity: "",
-    point: "",
-  });
-
-  function handleChange(event) {
-    if (event.target.name === "address") {
-      setFormData({
-        address: event.target.value,
-        severity: formData.severity,
-        point: formData.point,
-      });
-    }
-    if (event.target.name === "severity") {
-      setFormData({
-        address: formData.address,
-        severity: event.target.value,
-        point: formData.point,
-      });
-    }
-    if (event.target.name === "point") {
-      setFormData({
-        address: formData.address,
-        severity: formData.severity,
-        point: event.target.value,
-      });
-    }
-  }
-
-  function handleSubmit(event) {
-    alert(`${formData.address}, ${formData.severity}, ${formData.point}`);
-  }
+  const [address, setAddress] = useState("");
+  const [severity, setSeverity] = useState("");
+  const [point, setPoint] = useState("");
 
   const toggleModal = () => {
     setDefaultModal(!defaultModal);
   };
 
   useEffect(() => {
-    setItems([
-      {
-        address: "No 1234, ABC Road, XYZ place",
-        severity: "red",
-        point: { lat: "111111", lon: "11111" },
-      },
-      {
-        address: "No 2345, CDE Road, ABC place",
-        severity: "green",
-        point: { lat: "111111", lon: "11111" },
-      },
-    ]);
+    fetchData();
   }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      address &&
+      address !== "" &&
+      severity &&
+      severity !== "" &&
+      point &&
+      point !== ""
+    ) {
+      try {
+        await addDoc(collection(db, "severities"), {
+          address: address,
+          severity: severity,
+          point: point,
+        }).catch((e) => {
+          alert(e);
+        });
+        setAddress("");
+        setPoint("");
+        setSeverity("");
+        setDefaultModal(false);
+      } catch (error) {
+        alert(error);
+      }
+    } else {
+      alert("Enter Correct values");
+    }
+  };
+
+  const fetchData = () => {
+    const q = query(collection(db, "severities"));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let data = [];
+      querySnapshot.forEach((doc) => {
+        const inner_data = doc.data();
+        data.push({
+          id: doc.id,
+          address: inner_data.address,
+          severity: inner_data.severity,
+          point: inner_data.point,
+        });
+      });
+      data.sort((a, b) => a.severity - b.severity);
+      setItems(data);
+    });
+
+    return () => unsub();
+  };
 
   const Export = () => {
     const data = items;
@@ -89,7 +108,9 @@ const FloodSeverity = () => {
     exportFromJSON({ data, fileName, exportType });
   };
 
-  const Delete = () => {};
+  const Delete = async (id) => {
+    await deleteDoc(doc(db, "severities", id));
+  };
 
   function Items({ currentItems }) {
     return (
@@ -120,15 +141,15 @@ const FloodSeverity = () => {
                     <td>{row.address}</td>
                     <td>
                       {" "}
-                      <img
-                        alt="..."
-                        src={require(`assets/img/icons/common/triangle-${row.severity}.ico`)}
-                        height={24}
-                      />
+                      {row.severity && (
+                        <img
+                          alt="..."
+                          src={require(`assets/img/icons/common/triangle-${row.severity}.ico`)}
+                          height={24}
+                        />
+                      )}
                     </td>
-                    <td>
-                      {row.point.lat} , {row.point.lon}
-                    </td>
+                    <td>{row.point}</td>
                     <td>
                       {" "}
                       <UncontrolledDropdown className="col-md-4 d-flex justify-content-end">
@@ -145,7 +166,9 @@ const FloodSeverity = () => {
                           ></i>
                         </DropdownToggle>
                         <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem onClick={Delete}>Delete</DropdownItem>
+                          <DropdownItem onClick={() => Delete(row.id)}>
+                            Delete
+                          </DropdownItem>
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </td>
@@ -253,8 +276,8 @@ const FloodSeverity = () => {
                   <InputGroup className="input-group-alternative">
                     <Input
                       name="address"
-                      value={formData.address}
-                      onChange={handleChange}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
                       placeholder="Address"
                     />
                   </InputGroup>
@@ -264,8 +287,8 @@ const FloodSeverity = () => {
                   className="col-12 input-group-alternative py-2 mb-3"
                   aria-label="Default select example"
                   name="severity"
-                  value={formData.severity}
-                  onChange={handleChange}
+                  value={severity}
+                  onChange={(e) => setSeverity(e.target.value)}
                 >
                   <option selected>Select Severity</option>
                   <option value="red">Red</option>
@@ -277,8 +300,8 @@ const FloodSeverity = () => {
                   <InputGroup className="input-group-alternative">
                     <Input
                       name="point"
-                      value={formData.point}
-                      onChange={handleChange}
+                      value={point}
+                      onChange={(e) => setPoint(e.target.value)}
                       placeholder="Location Point"
                     />
                   </InputGroup>
