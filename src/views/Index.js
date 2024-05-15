@@ -36,6 +36,17 @@ const Index = (props) => {
   const [lon, setLon] = useState(process.env.REACT_APP_DEFAULT_LOCATION_LON);
   const [zoom, setZoom] = useState(12);
   const [language, setLanguage] = useState("eng");
+  useEffect(() => {
+    fetchSeverityData();
+    // flood prevention tips
+
+    // set prediction data
+    setPrediction([
+      { date: "2023/05/16", rainfall: "0.8", prediction: "23.7" },
+      { date: "2023/05/17", rainfall: "3.4", prediction: "95.3" },
+      { date: "2023/05/18", rainfall: "0.96", prediction: "36.7" },
+    ]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -51,23 +62,13 @@ const Index = (props) => {
       const userLocation = JSON.parse(localStorage.getItem("location"));
       setLat(userLocation.lat);
       setLon(userLocation.lon);
-      setZoom(15);
+      setZoom(14);
+      setPrediction([
+        { date: "2023/05/16", rainfall: "0.78", prediction: "21.4" },
+        { date: "2023/05/17", rainfall: "3.1", prediction: "92.3" },
+        { date: "2023/05/18", rainfall: "1.01", prediction: "38.2" },
+      ]);
     }
-  }, []);
-  useEffect(() => {
-    fetchSeverityData();
-    // flood prevention tips
-
-    // set prediction data
-    setPrediction([
-      { date: "today", rainfall: "187", prediction: "60" },
-      { date: "Tomorrow", rainfall: "100", prediction: "70" },
-      { date: "20th April", rainfall: "195", prediction: "80" },
-      { date: "21st April", rainfall: "165", prediction: "75" },
-      { date: "22nd April", rainfall: "67", prediction: "30" },
-      { date: "23rd April", rainfall: "65", prediction: "30" },
-      { date: "24th April", rainfall: "60", prediction: "30" },
-    ]);
   }, []);
 
   const fetchSeverityData = () => {
@@ -201,7 +202,7 @@ const Index = (props) => {
                   {predictions.map((p, i) => (
                     <tr key={i}>
                       <th scope="row">{p.date}</th>
-                      <td>{p.rainfall} mm</td>
+                      <td>{p.rainfall} m</td>
                       <td>
                         <div className="d-flex align-items-center">
                           <span className="mr-2">{p.prediction}%</span>
@@ -213,8 +214,8 @@ const Index = (props) => {
                                 Number(p.prediction) >= 70
                                   ? "bg-gradient-danger"
                                   : Number(p.prediction) > 50
-                                    ? "bg-gradient-info"
-                                    : "bg-gradient-success"
+                                  ? "bg-gradient-info"
+                                  : "bg-gradient-success"
                               }
                             />
                           </div>
@@ -226,7 +227,7 @@ const Index = (props) => {
               </Table>
             </Card>
           </Col>
-          <Col className="mb-5 mb-xl-0 mt-5 col-md-12" >
+          <Col className="mb-5 mb-xl-0 mt-5 col-md-12">
             <Card className="shadow col-md-12">
               <CardHeader className="border-0">
                 <Row className="align-items-center">
@@ -240,12 +241,11 @@ const Index = (props) => {
               <div className=" pl-3 mb-3 row">
                 {preventionTips.map((tip, i) => (
                   <div className="col-md-4 col-sm-4 col-lg-4 mb-1" key={i}>
-                    <Card >
+                    <Card>
                       <CardImg
                         alt="..."
                         src={require(`assets/img/detailed/${tip.image}`)}
                         top
-
                       />
                       <CardBody>
                         <CardTitle>{tip.title}</CardTitle>
@@ -255,7 +255,6 @@ const Index = (props) => {
                       </CardBody>
                     </Card>
                   </div>
-
                 ))}
               </div>
             </Card>

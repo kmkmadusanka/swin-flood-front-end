@@ -6,6 +6,6 @@
     border-radius:1vh;
 }
 
-.react-chat-message-buttonGroupRight{
+.react-chat-message-buttonGroupRight,.react-chat-message-buttonGroupLeft{
     width:10vh
 }

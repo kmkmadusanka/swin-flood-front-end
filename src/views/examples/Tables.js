@@ -26,44 +26,44 @@ const Tables = () => {
   useEffect(() => {
     setItems([
       {
-        date: "20th April 2024",
-        rainfall: "30",
-        flood_prediction: "40",
+        date: "2023/05/15",
+        rainfall: "2.73",
+        flood_prediction: "76.8",
       },
       {
-        date: "22th April 2024",
-        rainfall: "34",
-        flood_prediction: "40",
+        date: "2023/05/14",
+        rainfall: "2.35",
+        flood_prediction: "70.8",
       },
       {
-        date: "22th April 2024",
-        rainfall: "35",
-        flood_prediction: "40",
+        date: "2023/05/13",
+        rainfall: "1.6",
+        flood_prediction: "55.9",
       },
       {
-        date: "22th April 2024",
-        rainfall: "36",
-        flood_prediction: "40",
+        date: "2023/05/12",
+        rainfall: "0.95",
+        flood_prediction: "39.87",
       },
       {
-        date: "20th April 2024",
-        rainfall: "300",
-        flood_prediction: "40",
+        date: "2023/05/11",
+        rainfall: "0.8",
+        flood_prediction: "34.6",
       },
       {
-        date: "22th April 2024",
-        rainfall: "340",
-        flood_prediction: "40",
+        date: "2023/05/10",
+        rainfall: "0.85",
+        flood_prediction: "36.89",
       },
       {
-        date: "22th April 2024",
-        rainfall: "350",
-        flood_prediction: "40",
+        date: "2023/05/09",
+        rainfall: "0.78",
+        flood_prediction: "32",
       },
       {
-        date: "22th April 2024",
-        rainfall: "360",
-        flood_prediction: "40",
+        date: "2023/05/08",
+        rainfall: "0.81",
+        flood_prediction: "35.2",
       },
     ]);
   }, []);
@@ -82,7 +82,7 @@ const Tables = () => {
           <thead className="thead-light">
             <tr>
               <th scope="col">Date</th>
-              <th scope="col">Rainfall</th>
+              <th scope="col">River water level</th>
               <th scope="col">Flood Prediction Percentage</th>
             </tr>
           </thead>
@@ -101,7 +101,7 @@ const Tables = () => {
                 .map((row, i) => (
                   <tr key={i}>
                     <td>{row.date}</td>
-                    <td>{row.rainfall} ml</td>
+                    <td>{row.rainfall} m</td>
                     <td>
                       <div className="d-flex align-items-center">
                         <span className="mr-2"> {row.flood_prediction} %</span>

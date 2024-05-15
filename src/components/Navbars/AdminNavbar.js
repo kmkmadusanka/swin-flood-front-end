@@ -14,7 +14,7 @@ import {
 const AdminNavbar = (props) => {
   const name = localStorage.getItem("name");
   function signOut() {
-    const ans = window.confirm("DO you want to logout ? ");
+    const ans = window.confirm("Do you want to logout ? ");
     if (ans) {
       localStorage.removeItem("email");
       localStorage.removeItem("location");

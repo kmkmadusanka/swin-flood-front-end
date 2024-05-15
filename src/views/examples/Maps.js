@@ -38,12 +38,14 @@ const style = {
 };
 
 const schema = Yup.object().shape({
-  address: Yup.string()
-    .trim()
-    .min(6)
-    .required(),
+  address: Yup.string().trim().min(6).required(),
   distance: Yup.number().required(),
-  point: Yup.string().required().matches(/^([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?,([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?$/, "Location point should contain latitude and longitude seperated by comma!"),
+  point: Yup.string()
+    .required()
+    .matches(
+      /^([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?,([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?$/,
+      "Location point should contain latitude and longitude seperated by comma!"
+    ),
 });
 
 class Maps extends Component {
@@ -107,7 +109,7 @@ class Maps extends Component {
       const userLocation = JSON.parse(localStorage.getItem("location"));
       this.setState({
         point: { lat: userLocation.lat, lng: userLocation.lon },
-        zoom: 16,
+        zoom: 15,
       });
     }
 
@@ -144,9 +146,6 @@ class Maps extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
-
-
-
     try {
       const formData = {
         address: this.state.address,
@@ -165,10 +164,8 @@ class Maps extends Component {
         formModal: false,
       });
     } catch (error) {
-      alert(error)
+      alert(error);
     }
-
-
   };
   render() {
     return (

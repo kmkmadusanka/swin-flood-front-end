@@ -12,7 +12,7 @@ const language_object = {
     eng: "Rainfall with Flood Prediction",
   },
   date: { sin: "දිනය", eng: "DATE" },
-  rainfall: { sin: "වර්ෂාපතනය", eng: "RAINFALL" },
+  rainfall: { sin: "වර්ෂාපතනය", eng: "River Water Level" },
   flood_prediction: { sin: "ගංවතුර අනාවැකිය", eng: "FLOOD PREDICTION" },
   prevention_title: {
     sin: "ගංවතුර වැළැක්වීමේ තොරතුරු",
